@@ -1,0 +1,6 @@
+# HTTrack Website Copier Cookie File
+# This file format is compatible with Netscape cookies
+demos.flatsome.com	TRUE	/	FALSE	1999999999	yith_wcwl_session_5ef5acf5568add8a07c591949ffe1981	%7B%22session_id%22%3A%22f1d82eadffee2bf641cb9324ae7f0a57%22%2C%22session_expiration%22%3A1752413424%2C%22session_expiring%22%3A1752409824%2C%22cookie_hash%22%3A%227b4d638c02c3ebe5098356bf394bdd61%22%7D
+.demos.flatsome.com	TRUE	/	FALSE	1999999999	__cf_bm	8Yy5tUXCpu1Esxhl2aDYYoK6ZAwsghVPCbla8lxWoJ4-1749821441-1.0.1.1-Vx5pz56R3uvL3G6mnOzGKzK.Yh9.JL1nTbqUnfNp_k32aQ6CDcL3IprFBSapZw0u1ps2jZMbj1DHRCnGXLif3D.zEwySpRZmtmvk5tIR3AA
+demos.flatsome.com	TRUE	/	FALSE	1999999999	SameSite	None
+
