@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,16 +17,21 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-
-
-
         // User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        $this->call([
-        CategorySeeder::class,
-    ]);
 
+        $this->call(
+            [
+                CategorySeeder::class,
+                ColorSeeder::class,
+                SizeSeeder::class
+            ]
+        );
+
+        Product::factory(20)->create();
+
+        ProductVariant::factory(30)->create();
     }
 }

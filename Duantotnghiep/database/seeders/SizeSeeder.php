@@ -6,18 +6,19 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class CategorySeeder extends Seeder
+class SizeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('categories')->insert([
-            ['name' => 'Áo phông/ Áo thun'],
-            ['name' => 'Áo polo'],
-            ['name' => 'Áo sơ mi'],
-            ['name' => 'Áo chống nắng'],
+        DB::table('sizes')->insert([
+            ['name' => 'S'],
+            ['name' => 'M'],
+            ['name' => 'L'],
+            ['name' => 'XL'],
+            ['name' => 'XXL'],
         ]);
     }
 }
