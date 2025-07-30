@@ -18,9 +18,6 @@
         @yield('content')
     </div>
     <!-- /.content-wrapper -->
-      {{-- <div class="content-wrapper">
-        @yield('category')
-    </div> --}}
 
     @include('admins.blocks.footer')
 
@@ -28,5 +25,9 @@
 
 <!-- thêm js nếu cần -->
 <script src="{{ asset('admins/plugins/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('admins/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+@yield('scripts')
+
 </body>
 </html>
