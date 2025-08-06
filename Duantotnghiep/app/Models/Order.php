@@ -22,6 +22,13 @@ class Order extends Model
         'sale_price',
         'pay_amount',
     ];
+ public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
 
-    
 }

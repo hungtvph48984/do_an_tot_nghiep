@@ -19,7 +19,7 @@ class ProductFactory extends Factory
         return [
             'code'  => Str::upper(fake()->bothify('??#####?')),
             'name'  => fake()->text(25),
-            'image' => fake()->imageUrl(),
+            'image' => 'products/abc.jpg',
             'description'   => fake()->sentence(),
             'metarial'  => fake()->text(30),
             'instrut'   => fake()->text(99),
