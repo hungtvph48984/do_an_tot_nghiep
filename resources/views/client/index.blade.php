@@ -1885,7 +1885,17 @@
 
 @include('client.footer')
 
-
+<script>
+    // ẩn thông báo sau 3 giây
+    setTimeout(function () {
+        const alertEl = document.querySelector('.alert');
+        if (alertEl) {
+            alertEl.classList.remove('show');
+            alertEl.classList.add('fade');
+            setTimeout(() => alertEl.remove(), 500);
+        }
+    }, 3000);
+</script>
 
 <a href="#" class="scrollup" style="display: none;"><i class="ion-ios-arrow-up"></i></a>
 

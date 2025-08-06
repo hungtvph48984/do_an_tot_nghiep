@@ -45,7 +45,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="slug">Ghi chú</label>
-                                        <input type="text" class="form-control" id="slug" placeholder="Nhập ghi chú" name="slug" value="{{ old('slug') }}">
+                                        <input type="text" class="form-control" id="description" placeholder="Nhập ghi chú" name="description" value="{{ old('description') }}">
                                     </div>
                                     <div class="form-group">
                                         <div class="form-check">

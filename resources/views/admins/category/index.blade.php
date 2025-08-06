@@ -27,6 +27,15 @@
                 </button>
             </div>
         @endif
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
 
         <div class="row">
             <div class="col-12">
@@ -62,7 +71,7 @@
                                     <tr>
                                         <td>{{ $category->name }}</td>
                                         
-                                        <td>{{ $category->slug }}</td>
+                                        <td>{{ $category->description }}</td>
                                         <td>
                                             <form action="{{ route('admin.categories.toggleStatus', $category->id) }}"
                                                 method="POST"
@@ -85,7 +94,7 @@
 
                                         
                                         <td>
-                                            <a class="btn btn-warning" href="{{ route('admin.categories.edit', $category->id) }}">Xem</a>
+                                            <a class="btn btn-warning" href="{{ route('admin.categories.show', $category->id) }}">Xem</a>
                                             <a class="btn btn-primary" href="{{ route('admin.categories.edit', $category->id) }}">Sửa</a>
                                             <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xoá danh mục này không?');">
                                                 @csrf
@@ -111,7 +120,7 @@
 
 @section('scripts')
 <script>
-    // Tự động ẩn alert sau 3 giây
+    // ẩn thông báo sau 3 giây
     setTimeout(function () {
         const alertEl = document.querySelector('.alert');
         if (alertEl) {

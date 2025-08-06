@@ -48,10 +48,10 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="slug">Ghi chú</label>
-                                        <input type="text" class="form-control" id="slug"
-                                            placeholder="Đường dẫn" name="slug"
-                                            value="{{ old('slug', $category->slug) }}">
+                                        <label for="description">Ghi chú</label>
+                                        <input type="text" class="form-control" id="description"
+                                            placeholder="Đường dẫn" name="description"
+                                            value="{{ old('description', $category->description) }}">
                                     </div>
 
                                     <div class="form-group">

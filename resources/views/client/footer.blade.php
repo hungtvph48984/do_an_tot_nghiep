@@ -43,81 +43,6 @@
 
 <body>
 
-<!-- START SECTION TESTIMONIAL -->
-<div class="section bg_redon">
-	<div class="container">
-    	<div class="row justify-content-center">
-        	<div class="col-md-6">
-            	<div class="heading_s1 text-center">
-                	<h2>Our Client Say!</h2>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-lg-9">
-            	<div class="testimonial_wrap testimonial_style1 carousel_slider owl-carousel owl-theme nav_style2" data-nav="true" data-dots="false" data-center="true" data-loop="true" data-autoplay="true" data-items='1'>
-                	<div class="testimonial_box">
-                    	<div class="testimonial_desc">
-                        	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam amet animi blanditiis consequatur debitis dicta distinctio, enim error eum iste libero modi nam natus perferendis possimus quasi sint sit tempora voluptatem.</p>
-                        </div>
-                        <div class="author_wrap">
-                            <div class="author_img">
-                                <img src="assets/images/user_img1.jpg" alt="user_img1" />
-                            </div>
-                            <div class="author_name">
-                                <h6>Lissa Castro</h6>
-                                <span>Designer</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial_box">
-                    	<div class="testimonial_desc">
-                        	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam amet animi blanditiis consequatur debitis dicta distinctio, enim error eum iste libero modi nam natus perferendis possimus quasi sint sit tempora voluptatem.</p>
-                        </div>
-                        <div class="author_wrap">
-                            <div class="author_img">
-                                <img src="assets/images/user_img2.jpg" alt="user_img2" />
-                            </div>
-                            <div class="author_name">
-                                <h6>Alden Smith</h6>
-                                <span>Designer</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial_box">
-                    	<div class="testimonial_desc">
-                        	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam amet animi blanditiis consequatur debitis dicta distinctio, enim error eum iste libero modi nam natus perferendis possimus quasi sint sit tempora voluptatem.</p>
-                        </div>
-                        <div class="author_wrap">
-                            <div class="author_img">
-                                <img src="assets/images/user_img3.jpg" alt="user_img3" />
-                            </div>
-                            <div class="author_name">
-                                <h6>Daisy Lana</h6>
-                                <span>Designer</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial_box">
-                    	<div class="testimonial_desc">
-                        	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam amet animi blanditiis consequatur debitis dicta distinctio, enim error eum iste libero modi nam natus perferendis possimus quasi sint sit tempora voluptatem.</p>
-                        </div>
-                        <div class="author_wrap">
-                            <div class="author_img">
-                                <img src="assets/images/user_img4.jpg" alt="user_img4" />
-                            </div>
-                            <div class="author_name">
-                                <h6>John Becker</h6>
-                                <span>Designer</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- END SECTION TESTIMONIAL -->
 
 <!-- START SECTION SHOP INFO -->
 <div class="section pb_70">
@@ -130,7 +55,6 @@
                         </div>
                         <div class="icon_box_content">
                             <h5>Free Delivery</h5>
-                            <p>If you are going to use of Lorem, you need to be sure there anything</p>
                         </div>
                     </div>
                 </div>
@@ -141,7 +65,6 @@
                         </div>
                         <div class="icon_box_content">
                             <h5>30 Day Return</h5>
-                            <p>If you are going to use of Lorem, you need to be sure there anything</p>
                         </div>
                     </div>
                 </div>
@@ -152,7 +75,6 @@
                         </div>
                         <div class="icon_box_content">
                             <h5>27/4 Support</h5>
-                            <p>If you are going to use of Lorem, you need to be sure there anything</p>
                         </div>
                     </div>
                 </div>
@@ -250,11 +172,11 @@
                         <ul class="contact_info contact_info_light">
                             <li>
                                 <i class="ti-location-pin"></i>
-                                <p>123 Street, Old Trafford, New South London , UK</p>
+                                <p>Cao Đẳng FPT Polytechnic Hà Nội </p>
                             </li>
                             <li>
                                 <i class="ti-email"></i>
-                                <a href="mailto:info@sitename.com">info@sitename.com</a>
+                                <a href="mailto:info@sitename.com">Minite@gmail.com</a>
                             </li>
                             <li>
                                 <i class="ti-mobile"></i>
@@ -287,6 +209,17 @@
 </footer>
 <!-- END FOOTER -->
 
+<script>
+    // ẩn thông báo sau 3 giây
+    setTimeout(function () {
+        const alertEl = document.querySelector('.alert');
+        if (alertEl) {
+            alertEl.classList.remove('show');
+            alertEl.classList.add('fade');
+            setTimeout(() => alertEl.remove(), 500);
+        }
+    }, 3000);
+</script>
 <a href="#" class="scrollup" style="display: none;"><i class="ion-ios-arrow-up"></i></a>
 
 <!-- Latest jQuery -->

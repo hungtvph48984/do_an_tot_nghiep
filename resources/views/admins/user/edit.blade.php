@@ -26,7 +26,7 @@
             <label>Chức vụ</label>
             <select name="role" class="form-control" required>
                 <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="client" {{ $user->role === 'client' ? 'selected' : '' }}>Client</option>
+                <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>user</option>
             </select>
         </div>
 

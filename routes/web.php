@@ -32,8 +32,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', AdminMiddleware::cla
         // ẩn danh mục 
         Route::patch('/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])->name('toggleStatus');
         Route::get('/categories/hidden', [CategoryController::class, 'hidden'])->name('categories.hidden');
-
         Route::get('/hidden', [CategoryController::class, 'hidden'])->name('hidden');
+        // Xem chi tiết danh mục
+        Route::get('/{category}/show', [CategoryController::class, 'show'])->name('show');
+
     });
 
      Route::prefix('users')->name('user.')->group(function () {
@@ -59,20 +61,36 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Client\RegisterController;
 use App\Http\Controllers\Client\LoginClientController;
+use App\Http\Controllers\Client\ContactController;
+use App\Http\Controllers\Client\ProfileController;
 
-Route::get('/client', [ClientController::class, 'index']);
+Route::get('/client', [ClientController::class, 'index'])->name('client.index');
 // Route::get('/about', [ClientController::class, 'about']);
 Route::get('/about', [ClientController::class, 'about'])->name('client.about');
 Route::get('/index_2', [ClientController::class, 'index_2'])->name('client.index_2');
+Route::get('/contact', [ClientController::class, 'contact'])->name('client.contact');
 
 
-
+// ✅ Route đăng nhập
 Route::get('/login/client', [LoginClientController::class, 'showLoginForm'])->name('client.login');
 Route::post('/login/client', [LoginClientController::class, 'login'])->name('client.login.submit');
 Route::post('/logout/client', [LoginClientController::class, 'logout'])->name('client.logout');
 
+// ✅ Route đăng ký tài khoản khách hàng
 Route::get('/register/client', [RegisterController::class, 'showRegistrationForm'])->name('client.register');
 Route::post('/register/client', [RegisterController::class, 'register'])->name('client.register.submit');
+
+// ✅ Route liên hệ
+Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.form');
+Route::post('/contact', [ContactController::class, 'submitForm'])->name('contact.submit');
+
+// ✅ Route profile người dùng
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/password', [ProfileController::class, 'changePassword'])->name('profile.password');
+});
+
 
 
 

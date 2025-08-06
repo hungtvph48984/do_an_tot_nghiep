@@ -63,7 +63,7 @@
                                     <tr>
                                         <td>{{ $category->name }}</td>
                                         
-                                        <td>{{ $category->slug }}</td>
+                                        <td>{{ $category->description }}</td>
                                         <td>
                                             <form action="{{ route('admin.categories.toggleStatus', $category->id) }}"
                                                 method="POST"
@@ -86,7 +86,7 @@
 
                                         
                                         <td>
-                                            <a class="btn btn-warning" href="{{ route('admin.categories.edit', $category->id) }}">Xem</a>
+                                            <a class="btn btn-warning" href="{{ route('admin.categories.show', $category->id) }}">Xem</a>
                                             <a class="btn btn-primary" href="{{ route('admin.categories.edit', $category->id) }}">Sửa</a>
                                             <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xoá danh mục này không?');">
                                                 @csrf

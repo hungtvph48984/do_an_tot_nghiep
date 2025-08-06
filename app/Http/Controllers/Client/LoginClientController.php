@@ -21,7 +21,7 @@ class LoginClientController extends Controller
             $user = Auth::user();
 
             // ✅ Chỉ cho đăng nhập nếu là client
-            if ($user->role !== 'client') {
+            if ($user->role !== 'user') {
                 Auth::logout();
                 return back()->with('error', 'Tài khoản không thuộc quyền truy cập của khách hàng.');
             }
@@ -33,7 +33,7 @@ class LoginClientController extends Controller
             }
 
             $request->session()->regenerate();
-            return redirect()->intended('/client');
+            return redirect()->intended('/client')-> with('success', 'Đăng nhập thành công!');
         }
 
         return back()->with('error', 'Sai thông tin đăng nhập!');

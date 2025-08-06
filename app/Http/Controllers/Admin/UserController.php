@@ -39,7 +39,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|in:admin,client',
+            'role' => 'required|in:admin,user',
             'status' => 'required|boolean',
         ]);
 

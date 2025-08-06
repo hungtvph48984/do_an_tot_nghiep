@@ -45,7 +45,6 @@ class CategoryController extends Controller
 
         Category::create([
             'name' => $request->name,
-            'slug' => Str::slug($request->slug),
             'description' => $request->description,
             'is_active' => $request->has('is_active'),
         ]);
@@ -73,7 +72,7 @@ class CategoryController extends Controller
 
         $category->update([
             'name' => $request->name,
-            'slug' => Str::slug($request->slug),
+            'icon' => $request->icon,
             'description' => $request->description,
             'is_active' => $request->has('is_active'),
         ]);
@@ -83,11 +82,19 @@ class CategoryController extends Controller
 
     
     /**
-     * Xóa danh mục khỏi cơ sở dữ liệu.
+     * Xóa danh mục khỏi cơ sở dữ liệu, và nếu còn sản phẩm thuộc danh mục đó thì không cho xóa .
      */
     public function destroy($id)
     {
-        Category::destroy($id);
+        $category = Category::withCount('products')->findOrFail($id);
+
+        // nếu còn sản phẩm thì không cho xóa
+        if ($category->products_count > 0) {
+            return redirect()->route('admin.categories.index')->with('error', 'Không thể xóa! Trong danh mục có sản phẩm.');
+        }
+
+        $category->delete();
+
         return redirect()->route('admin.categories.index')->with('success', 'Xóa danh mục thành công!');
     }
 
@@ -103,7 +110,7 @@ class CategoryController extends Controller
         return redirect()->back()->with('success', 'Cập nhật trạng thái danh mục thành công!');
     }
 
-    // Hiển thị danh mục đã ẩn sang bảng mới
+    // Hiển thị danh mục đã ẩn
     public function hidden(Request $request)
     {
         $keyword = $request->input('keyword');
@@ -119,6 +126,13 @@ class CategoryController extends Controller
 
         return view('admins.category.hidden', compact('categories', 'keyword'));
     }
+
+    public function show($id)
+    {
+        $category = Category::with('products')->findOrFail($id);
+        return view('admins.category.show', compact('category'));
+    }
+
 
 
 

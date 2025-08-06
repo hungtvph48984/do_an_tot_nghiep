@@ -20,5 +20,9 @@ class ClientController extends Controller
     {
         return view('client.index-2');
     }
+    public function contact()
+    {
+        return view('client.contact');
+    }
 }
 
