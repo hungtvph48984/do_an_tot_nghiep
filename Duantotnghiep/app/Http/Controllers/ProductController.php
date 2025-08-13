@@ -100,7 +100,7 @@ class ProductController extends Controller
             ->limit(4)
             ->get();
 
-        return view('detail', compact('product', 'productRelead'));
+        return view('clients.detail', compact('product', 'productRelead'));
     }
 
     public function getAttributePrice(Request $request)
@@ -119,4 +119,17 @@ class ProductController extends Controller
         //Lấy giá của sản phẩm
         return response()->json($variant);
     }
+
+    public function getVariant(Request $request)
+{
+    $variantId = $request->input('variant_id');
+
+    $variant = ProductVariant::with(['product', 'size', 'color'])->find($variantId);
+
+    if (!$variant) {
+        return response()->json(['error' => 'Variant not found'], 404);
+    }
+
+    return response()->json($variant);
+}
 }

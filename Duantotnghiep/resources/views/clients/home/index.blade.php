@@ -127,7 +127,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ $product->name }}</h5>
                             <p class="card-text fw-bold text-danger">{{ $product->lowest_price ?? 0 }} $</p>
-                            <a href="#" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
+                            <a href="{{ route('product.detail', $product->id) }}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
                         </div>
                     </div>
                 </div>

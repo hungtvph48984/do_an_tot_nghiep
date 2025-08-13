@@ -39,22 +39,15 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Thêm sản phẩm vào giỏ hàng thành công!');
     }
     //hiển thị giỏ hàng
-   public function show()
+  public function show()
     {
-        if (!session()->has('cart') || empty(session('cart'))) {
-        return view('clients.cart.show', [
-            'cart' => [],
-            'totalPrice' => 0
-        ]);
-    }
-
-    $cart = session('cart');
-    $totalPrice = 0;
-    foreach ($cart as $item) {
-        $totalPrice += $item['price'] * $item['quantity'];
-    }
-
-    return view('clients.cart.show', compact('cart', 'totalPrice'));
+        $cart = session()->get('cart', []);
+        $totalPrice = 0;
+        foreach ($cart as $item) {
+            $totalPrice += $item['price'] * $item['quantity'];
+        }
+        // dd($cart);
+        return view('clients.cart.show', compact('cart', 'totalPrice'));
     }
     //Hiển thị form thanh toán
     public function showCheckout()
