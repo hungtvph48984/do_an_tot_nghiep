@@ -17,8 +17,9 @@ return new class extends Migration
             $table->string('address');
             $table->string('phone');
             $table->string('email');
-            $table->tinyInteger('status');
-            $table->string('payment');
+            $table->string('note')->nullable();
+            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('payment_method');
             $table->decimal('total', 10, 2);
             $table->integer('vorcher_code')->nullable();
             $table->decimal('sale_price')->nullable();

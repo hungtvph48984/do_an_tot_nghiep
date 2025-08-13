@@ -24,5 +24,9 @@ class ClientController extends Controller
     {
         return view('client.contact');
     }
+    public function checkout()
+    {
+        return view('client.checkout');
+    }
 }
 

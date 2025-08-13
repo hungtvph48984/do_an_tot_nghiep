@@ -63,12 +63,15 @@ use App\Http\Controllers\Client\RegisterController;
 use App\Http\Controllers\Client\LoginClientController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\ProfileController;
+use App\Http\Controllers\Client\CheckoutController;
+use App\Http\Controllers\client\CouponController;
 
 Route::get('/client', [ClientController::class, 'index'])->name('client.index');
 // Route::get('/about', [ClientController::class, 'about']);
 Route::get('/about', [ClientController::class, 'about'])->name('client.about');
 Route::get('/index_2', [ClientController::class, 'index_2'])->name('client.index_2');
 Route::get('/contact', [ClientController::class, 'contact'])->name('client.contact');
+Route::get('/checkout', [ClientController::class, 'checkout'])->name('client.checkout');
 
 
 // ✅ Route đăng nhập
@@ -89,6 +92,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/password', [ProfileController::class, 'changePassword'])->name('profile.password');
+
+// ✅ Route thanh toán
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+// ✅ Route mã giảm giá
+    Route::post('/apply-coupon', [CouponController::class, 'apply'])->name('apply.coupon');
 });
 
 
