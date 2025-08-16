@@ -3,12 +3,7 @@
 @section('title', $product->name)
 
 @section('content')
-@if(session('success'))
-    <div class="alert alert-success fade show" role="alert">
-        <strong>Thành công!</strong> {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-@endif
+
 
 <div class="section">
     <div class="container">

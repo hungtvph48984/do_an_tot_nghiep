@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Support\Facades\Auth;
+
 class CartController extends Controller
 {
     public function addToCart(Request $request)
@@ -36,10 +37,11 @@ class CartController extends Controller
         session()->put('cart', $cart);
 
         //Trả về thông báo thành công
-        return redirect()->back()->with('success', 'Thêm sản phẩm vào giỏ hàng thành công!');
+       return redirect()->route('cart.show')->with('success', 'Thêm sản phẩm vào giỏ hàng thành công!');
+
     }
     //hiển thị giỏ hàng
-  public function show()
+    public function show()
     {
         $cart = session()->get('cart', []);
         $totalPrice = 0;
@@ -48,6 +50,19 @@ class CartController extends Controller
         }
         // dd($cart);
         return view('clients.cart.show', compact('cart', 'totalPrice'));
+    }
+    // Xóa sản phẩm khỏi giỏ hàng
+    public function remove($id)
+    {
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$id])) {
+            unset($cart[$id]);
+            session()->put('cart', $cart);
+            return redirect()->route('cart.show')->with('success', 'Đã xóa sản phẩm khỏi giỏ hàng!');
+        }
+
+        return redirect()->route('cart.show')->with('error', 'Sản phẩm không tồn tại trong giỏ hàng!');
     }
     //Hiển thị form thanh toán
     public function showCheckout()
@@ -107,7 +122,7 @@ class CartController extends Controller
         // Sau khi thanh toán thành công, xóa giỏ hàng
         session()->forget('cart');
 
-        return redirect()->route('home')->with('success', 'Thanh toán thành công!');
+        return redirect()->route('order.show', $order->id)
+                 ->with('success', 'Thanh toán thành công!');
     }
 }
-

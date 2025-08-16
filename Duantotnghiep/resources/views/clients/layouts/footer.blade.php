@@ -129,6 +129,16 @@
 <script src="assets/js/jquery.elevatezoom.js"></script>
 <!-- scripts js -->
 <script src="assets/js/scripts.js"></script>
-
+<script>
+    // ẩn thông báo sau 3 giây
+    setTimeout(function () {
+        const alertEl = document.querySelector('.alert');
+        if (alertEl) {
+            alertEl.classList.remove('show');
+            alertEl.classList.add('fade');
+            setTimeout(() => alertEl.remove(), 500);
+        }
+    }, 3000);
+</script>
 </body>
 </html>

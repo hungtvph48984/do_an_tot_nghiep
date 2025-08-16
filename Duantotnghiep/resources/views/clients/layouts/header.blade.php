@@ -37,13 +37,53 @@
 <link rel="stylesheet" href="{{ asset('assets/css/slick-theme.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
+<style>
+.user-dropdown {
+    position: relative;
+}
 
+.user-dropdown .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 5px 0;
+    z-index: 1000;
+    min-width: 120px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.user-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.user-dropdown .dropdown-item {
+    display: block;
+    padding: 8px 16px;
+    color: #333;
+    text-decoration: none;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.user-dropdown .dropdown-item:hover {
+    background-color: #f5f5f5;
+}
+
+</style>
 
 </head>
 
 <body>
 
-
+@if (session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+@endif
 
 <!-- START HEADER -->
 <header class="header_wrap fixed-top header_with_topbar">
@@ -74,10 +114,31 @@
                 <div class="col-md-6">
                 	<div class="text-center text-md-end">
                        	<ul class="header_list">
-                        	<li><a href="compare.html"><i class="ti-control-shuffle"></i><span>Compare</span></a></li>
+                            <li><a href="compare.html"><i class="ti-control-shuffle"></i><span>Compare</span></a></li>
                             <li><a href="wishlist.html"><i class="ti-heart"></i><span>Wishlist</span></a></li>
-                            <li><a href="login.html"><i class="ti-user"></i><span>Login</span></a></li>
-						</ul>
+
+                            @if (Auth::check())
+                                <li class="user-dropdown">
+                                    <a href="#">
+                                        <i class="ti-user"></i>
+                                        <span>{{ Auth::user()->name }}</span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <form action="{{ route('client.logout') }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item logout-btn">
+                                                    <i class="ti-power-off"></i> Logout
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @else
+                                <li><a href="{{ route('login') }}"><i class="ti-user"></i><span>Login</span></a></li>
+                            @endif
+                        </ul>
+
                     </div>
                 </div>
             </div>

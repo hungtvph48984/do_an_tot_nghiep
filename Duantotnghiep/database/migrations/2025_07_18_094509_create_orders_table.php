@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email');
             $table->tinyInteger('status');
             $table->string('payment');
+             $table->text('note')->nullable();
             $table->decimal('total', 10, 2);
             $table->integer('vorcher_code')->nullable();
             $table->decimal('sale_price')->nullable();

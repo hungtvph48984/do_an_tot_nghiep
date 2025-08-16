@@ -101,6 +101,8 @@ class ProductController extends Controller
             ->get();
 
         return view('clients.detail', compact('product', 'productRelead'));
+
+
     }
 
     public function getAttributePrice(Request $request)
