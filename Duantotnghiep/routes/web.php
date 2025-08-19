@@ -6,15 +6,22 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
-
     Route::get('/', function () {
         return view('admins.layouts.master');
     });
 
     // Nhóm route sản phẩm
-    Route::get('/products', [ProductController::class, 'index'])->name('product.index');
+    Route::resource('products', ProductController::class)->names([
+        'index' => 'products.index',
+        'create' => 'products.create',
+        'store' => 'products.store',
+        'show' => 'products.show',
+        'edit' => 'products.edit',
+        'update' => 'products.update',
+        'destroy' => 'products.destroy',
+    ]);
 
-    //  Nhóm route danh mục
+    // Nhóm route danh mục
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index'); // admin.categories.index
         Route::get('/create', [CategoryController::class, 'create'])->name('create'); // admin.categories.create
@@ -23,7 +30,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/{category}', [CategoryController::class, 'update'])->name('update'); // admin.categories.update
         Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy'); // admin.categories.destroy
     });
-
 });
-Route::get('/', [HomeController::class, 'index'])->name('home.index'); // home.index
 
+Route::get('/', [HomeController::class, 'index'])->name('home.index'); // home.index
