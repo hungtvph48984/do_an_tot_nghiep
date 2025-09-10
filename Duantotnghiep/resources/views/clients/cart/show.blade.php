@@ -2,10 +2,7 @@
 @section('title', 'Giỏ hàng')
 @section('content')
 
-    <!-- LOADER -->
-    <div class="preloader">
-        <div class="lds-ellipsis"><span></span><span></span><span></span></div>
-    </div>
+  
 
     <!-- START SECTION BREADCRUMB -->
     <div class="breadcrumb_section bg_gray page-title-mini">
@@ -87,8 +84,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-8 col-md-6 text-start text-md-end">
-                                                        <button class="btn btn-line-fill btn-sm" type="submit">Cập nhật giỏ
-                                                            hàng</button>
+
 
                                                         {{-- Chỉ hiển thị nút Thanh toán khi có sản phẩm --}}
                                                         @if (!empty($cart) && count($cart) > 0)
@@ -115,7 +111,7 @@
                     </div>
                 </form>
                 <div class="mt-4">
-                    <a href="#" class="btn btn-outline-secondary">Tiếp tục mua hàng</a>
+                    <a href="{{ route('home.index') }}" class="btn btn-outline-secondary">Tiếp tục mua hàng</a>
                 </div>
             </div>
         </div>

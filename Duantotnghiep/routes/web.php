@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Client\LoginClientController;
+use App\Http\Controllers\Client\PaymentController;
 use App\Http\Controllers\Client\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
@@ -44,6 +45,7 @@ Route::post('/register/client', [RegisterController::class, 'register'])->name('
 
 // Các route cần đăng nhập
 Route::middleware('auth')->group(function () {
+    //sản phẩm yêu thích
 
     // Thêm sản phẩm vào giỏ hàng
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
@@ -54,6 +56,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart/checkout', [CartController::class, 'showCheckout'])->name('cart.checkout');
     //Thanh toán
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout.post');
-     Route::get('/order', [OrderController::class, 'index'])->name('orders.index');   // tất cả đơn hàng
+     Route::get('/order', [OrderController::class, 'index'])->name('orders.index');
+      // tất cả đơn hàng
     Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
+
+    // Routes cho thanh toán
+    Route::prefix('payment')->name('client.payment.')->group(function () {
+        Route::post('/success', [PaymentController::class, 'paymentSuccess'])->name('success');
+        Route::post('/failed', [PaymentController::class, 'paymentFailed'])->name('failed');
+        Route::post('/cod/{order}', [PaymentController::class, 'processCodPayment'])->name('cod');
+    });
 });

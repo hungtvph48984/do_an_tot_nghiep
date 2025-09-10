@@ -50,6 +50,10 @@
     </table>
 
     <h4 class="text-end">Tổng tiền: <strong>{{ number_format($order->pay_amount) }} đ</strong></h4>
+    <div class="mt-4 text-end">
+    <a href="{{ route('orders.index') }}" class="btn btn-primary">Quay lại danh sách đơn hàng</a>
 </div>
+</div>
+
 
 @endsection

@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('phone');
             $table->string('email');
             $table->tinyInteger('status');
-            $table->string('payment');
+            $table->string('payment_method'); // cod, bank
+$table->string('payment_status')->default('unpaid'); // unpaid, paid
              $table->text('note')->nullable();
             $table->decimal('total', 10, 2);
             $table->integer('vorcher_code')->nullable();

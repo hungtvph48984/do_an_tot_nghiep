@@ -2,11 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Product;
-use App\Models\ProductVariant;
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Product;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,23 +12,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Seed danh mục, màu, size trước
+        $this->call([
+            CategorySeeder::class,
+            ColorSeeder::class,
+            SizeSeeder::class,
+        ]);
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-        $this->call(
-            [
-                CategorySeeder::class,
-                ColorSeeder::class,
-                SizeSeeder::class
-            ]
-        );
-
-        Product::factory(20)->create();
-
-        ProductVariant::factory(30)->create();
+        // Tạo 20 sản phẩm, mỗi sản phẩm có 3-5 biến thể
+        Product::factory(20)->create()->each(function ($product) {
+            $product->variants()->createMany(
+                \App\Models\ProductVariant::factory(rand(3, 5))->make()->toArray()
+            );
+        });
     }
 }

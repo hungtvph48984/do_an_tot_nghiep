@@ -37,8 +37,7 @@ class CartController extends Controller
         session()->put('cart', $cart);
 
         //Trả về thông báo thành công
-       return redirect()->route('cart.show')->with('success', 'Thêm sản phẩm vào giỏ hàng thành công!');
-
+        return redirect()->route('cart.show')->with('success', 'Thêm sản phẩm vào giỏ hàng thành công!');
     }
     //hiển thị giỏ hàng
     public function show()
@@ -105,8 +104,9 @@ class CartController extends Controller
         $order->address = $request->input('address');
         $order->user_id = Auth::id();
         $order->total = $totalPrice;
-        $order->status = 0; // 0: đơn hàng mới
-        $order->payment = $request->input('payment'); //Phương thức thanh toán
+        $order->status = 0; // Trạng thái đơn hàng (0: mới, 1: đang xử lý, 2: đã hoàn thành, v.v.)
+        $order->payment_method = $request->input('payment'); // Lưu phương thức COD / Bank
+        $order->payment_status = 'unpaid'; // Hoặc set mặc định theo logic
         $order->note = $request->input('note'); //Ghi chú
         $order->pay_amount = $totalPrice; //Số tiền thanh toán
         $order->save();
@@ -123,6 +123,6 @@ class CartController extends Controller
         session()->forget('cart');
 
         return redirect()->route('order.show', $order->id)
-                 ->with('success', 'Thanh toán thành công!');
+            ->with('success', 'Thanh toán thành công!');
     }
 }
