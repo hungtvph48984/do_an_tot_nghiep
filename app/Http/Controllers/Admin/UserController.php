@@ -49,5 +49,17 @@ class UserController extends Controller
         return redirect()->route('admin.user.index')->with('success', 'Cập nhật người dùng thành công!');
     }
 
+<<<<<<< HEAD
+=======
+    // public function orders($id)
+    // {
+    //     $user = User::findOrFail($id);
+    //     $orders = Order::where('user_id', $id)->latest()->get();
+
+    //     return view('admins.users.orders', compact('user', 'orders'));
+    // }
+
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
 
 }

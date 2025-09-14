@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('icon')->nullable();
+<<<<<<< HEAD
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
+=======
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             $table->timestamps();
         });
     }

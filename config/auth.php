@@ -40,6 +40,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+<<<<<<< HEAD
+=======
+
+            'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
     ],
 
     /*
@@ -65,6 +73,14 @@ return [
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
+<<<<<<< HEAD
+=======
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_ADMIN_MODEL', App\Models\Admin::class),
+        ],
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

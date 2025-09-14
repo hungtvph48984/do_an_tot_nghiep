@@ -10,7 +10,11 @@ class LoginClientController extends Controller
 {
     public function showLoginForm()
     {
+<<<<<<< HEAD
         return view('client.login');
+=======
+        return view('clients.login');
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
     }
 
     public function login(Request $request)
@@ -33,7 +37,11 @@ class LoginClientController extends Controller
             }
 
             $request->session()->regenerate();
+<<<<<<< HEAD
             return redirect()->intended('/client')-> with('success', 'Đăng nhập thành công!');
+=======
+            return redirect()->intended('/')-> with('success', 'Đăng nhập thành công!');
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
         }
 
         return back()->with('error', 'Sai thông tin đăng nhập!');

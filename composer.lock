@@ -4,7 +4,13 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "a645d9a5ea2ef0aea6034bafa8fe5906",
+=======
+
+    "content-hash": "88970a0117c062eed55fa8728fc43833",
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
     "packages": [
         {
             "name": "brick/math",
@@ -1056,6 +1062,10 @@
         },
         {
             "name": "laravel/framework",
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             "version": "v12.19.3",
             "source": {
                 "type": "git",
@@ -1066,6 +1076,10 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/framework/zipball/4e6ec689ef704bb4bd282f29d9dd658dfb4fb262",
                 "reference": "4e6ec689ef704bb4bd282f29d9dd658dfb4fb262",
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
                 "shasum": ""
             },
             "require": {
@@ -1267,7 +1281,13 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
+<<<<<<< HEAD
             "time": "2025-06-18T12:56:23+00:00"
+=======
+
+            "time": "2025-06-18T12:56:23+00:00"
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
         },
         {
             "name": "laravel/prompts",
@@ -1456,6 +1476,7 @@
             "time": "2025-01-27T14:24:01+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "laravel/ui",
             "version": "v4.6.1",
             "source": {
@@ -1519,6 +1540,8 @@
             "time": "2025-01-28T15:15:29+00:00"
         },
         {
+=======
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             "name": "league/commonmark",
             "version": "2.7.0",
             "source": {
@@ -5844,6 +5867,10 @@
     ],
     "packages-dev": [
         {
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             "name": "fakerphp/faker",
             "version": "v1.24.1",
             "source": {
@@ -5907,6 +5934,10 @@
             "time": "2024-11-21T13:46:39+00:00"
         },
         {
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             "name": "filp/whoops",
             "version": "2.18.3",
             "source": {
@@ -6029,6 +6060,7 @@
             "time": "2025-04-30T06:54:44+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "laravel/breeze",
             "version": "v2.3.7",
             "source": {
@@ -6090,6 +6122,9 @@
             "time": "2025-06-17T13:07:20+00:00"
         },
         {
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             "name": "laravel/pail",
             "version": "v1.2.3",
             "source": {
@@ -6540,6 +6575,10 @@
             "time": "2025-06-11T01:04:21+00:00"
         },
         {
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             "name": "phar-io/manifest",
             "version": "2.0.4",
             "source": {
@@ -6658,6 +6697,10 @@
             "time": "2022-02-21T01:04:05+00:00"
         },
         {
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             "name": "phpunit/php-code-coverage",
             "version": "11.0.10",
             "source": {
@@ -6669,6 +6712,10 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/1a800a7446add2d79cc6b3c01c45381810367d76",
                 "reference": "1a800a7446add2d79cc6b3c01c45381810367d76",
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
                 "shasum": ""
             },
             "require": {
@@ -6725,12 +6772,22 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
+<<<<<<< HEAD
                 "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/show"
+=======
+
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/show"
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
                     "type": "github"
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
                 },
                 {
                     "url": "https://liberapay.com/sebastianbergmann",
@@ -6746,6 +6803,10 @@
                 }
             ],
             "time": "2025-06-18T08:56:18+00:00"
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -6994,6 +7055,10 @@
         },
         {
             "name": "phpunit/phpunit",
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             "version": "11.5.23",
             "source": {
                 "type": "git",
@@ -7004,6 +7069,10 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/86ebcd8a3dbcd1857d88505109b2a2b376501cde",
                 "reference": "86ebcd8a3dbcd1857d88505109b2a2b376501cde",
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
                 "shasum": ""
             },
             "require": {
@@ -7013,7 +7082,13 @@
                 "ext-mbstring": "*",
                 "ext-xml": "*",
                 "ext-xmlwriter": "*",
+<<<<<<< HEAD
                 "myclabs/deep-copy": "^1.13.1",
+=======
+
+                "myclabs/deep-copy": "^1.13.1",
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.2",
@@ -7026,7 +7101,13 @@
                 "sebastian/code-unit": "^3.0.3",
                 "sebastian/comparator": "^6.3.1",
                 "sebastian/diff": "^6.0.2",
+<<<<<<< HEAD
                 "sebastian/environment": "^7.2.1",
+=======
+
+                "sebastian/environment": "^7.2.1",
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
                 "sebastian/exporter": "^6.3.0",
                 "sebastian/global-state": "^7.0.2",
                 "sebastian/object-enumerator": "^6.0.1",
@@ -7075,7 +7156,13 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
+<<<<<<< HEAD
                 "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.23"
+=======
+
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.23"
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             },
             "funding": [
                 {
@@ -7087,6 +7174,10 @@
                     "type": "github"
                 },
                 {
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
                     "url": "https://liberapay.com/sebastianbergmann",
                     "type": "liberapay"
                 },
@@ -7095,11 +7186,21 @@
                     "type": "thanks_dev"
                 },
                 {
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
                     "url": "https://tidelift.com/funding/github/packagist/phpunit/phpunit",
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
             "time": "2025-06-13T05:47:49+00:00"
+=======
+
+            "time": "2025-06-13T05:47:49+00:00"
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
         },
         {
             "name": "sebastian/cli-parser",
@@ -8164,6 +8265,11 @@
             "time": "2025-04-04T10:10:33+00:00"
         },
         {
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             "name": "theseer/tokenizer",
             "version": "1.2.3",
             "source": {

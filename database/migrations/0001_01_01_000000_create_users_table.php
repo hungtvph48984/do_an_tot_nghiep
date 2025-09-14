@@ -19,7 +19,11 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
+<<<<<<< HEAD
             $table->string('status')->default('1');
+=======
+            $table->enum('status', ['0', '1'])->default('1'); // 0: Khóa, 1: Hoạt động
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             $table->enum('role', ['admin', 'user'])->default('user');
             $table->rememberToken();
             $table->timestamps();
