@@ -123,15 +123,45 @@ class ProductController extends Controller
     }
 
     public function getVariant(Request $request)
-{
-    $variantId = $request->input('variant_id');
+    {
+        $variantId = $request->input('variant_id');
 
-    $variant = ProductVariant::with(['product', 'size', 'color'])->find($variantId);
+        $variant = ProductVariant::with(['product', 'size', 'color'])->find($variantId);
 
-    if (!$variant) {
-        return response()->json(['error' => 'Variant not found'], 404);
+        if (!$variant) {
+            return response()->json(['error' => 'Variant not found'], 404);
+        }
+
+        return response()->json($variant);
     }
 
-    return response()->json($variant);
-}
+    //lọc sản phẩm bên danh mục
+    public function filter(Request $request)
+    {
+        $query = Product::with(['variants.size', 'variants.color']);
+
+        // Lọc theo danh mục
+        if ($request->category_id) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Lọc theo giá (nằm ở bảng product_variants)
+        if ($request->min_price && $request->max_price) {
+            $query->whereHas('variants', function ($q) use ($request) {
+                $q->whereBetween('price', [$request->min_price, $request->max_price]);
+            });
+        }
+
+        // Lọc theo size
+        if ($request->size_id) {
+            $query->whereHas('variants', function ($q) use ($request) {
+                $q->whereIn('size_id', (array) $request->size_id);
+            });
+        }
+
+        $products = $query->paginate(12);
+
+        return view('clients.category.show', compact('products'));
+    }
+
 }

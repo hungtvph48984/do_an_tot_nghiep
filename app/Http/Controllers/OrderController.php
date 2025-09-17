@@ -8,15 +8,50 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    // Danh sách đơn hàng của user
-    public function index()
+    // Danh sách đơn hàng của user, kèm cả lọc
+    public function index(Request $request)
     {
-        $orders = Order::where('user_id', Auth::id())
-            ->latest()
-            ->get();
+        $query = Order::query()
+            ->where('user_id', auth()->id())
+            ->with('orderDetails.product');
+
+        if ($request->filled('keyword')) {
+            $keyword = $request->keyword;
+
+            $query->where(function ($q) use ($keyword) {
+                $q->where('id', 'like', "%{$keyword}%")
+                ->orWhereHas('orderDetails.product', function ($sub) use ($keyword) {
+                    $sub->where('name', 'like', "%{$keyword}%");
+                });
+            });
+        }
+
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('created_at', [
+                $request->start_date . ' 00:00:00',
+                $request->end_date . ' 23:59:59'
+            ]);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('min_price') && $request->filled('max_price')) {
+            $query->whereBetween('pay_amount', [$request->min_price, $request->max_price]);
+        } elseif ($request->filled('min_price')) {
+            $query->where('pay_amount', '>=', $request->min_price);
+        } elseif ($request->filled('max_price')) {
+            $query->where('pay_amount', '<=', $request->max_price);
+        }
+
+        $orders = $query->orderBy('created_at', 'desc')
+                        ->paginate(5)
+                        ->appends($request->query());
 
         return view('clients.order.index', compact('orders'));
     }
+
 
     // Chi tiết 1 đơn hàng
     public function show($id)
@@ -76,4 +111,6 @@ class OrderController extends Controller
 
         return view('clients.profile.profile', compact('orders'));
     }
+
+
 }

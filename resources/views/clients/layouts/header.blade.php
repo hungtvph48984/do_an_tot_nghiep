@@ -116,43 +116,25 @@
 
 <!-- START HEADER -->
 <header class="header_wrap fixed-top header_with_topbar">
-	<div class="top-header">
+    <div class="top-header">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                	<div class="d-flex align-items-center justify-content-center justify-content-md-start">
-                        <div class="lng_dropdown me-2">
-                            <select name="countries" class="custome_select">
-                                <option value='en' data-image="assets/images/eng.png" data-title="English">English</option>
-                                <option value='fn' data-image="assets/images/fn.png" data-title="France">France</option>
-                                <option value='us' data-image="assets/images/us.png" data-title="United States">United States</option>
-                            </select>
-                        </div>
-                        <div class="me-3">
-                            <select name="countries" class="custome_select">
-                                <option value='USD' data-title="USD">USD</option>
-                                <option value='EUR' data-title="EUR">EUR</option>
-                                <option value='GBR' data-title="GBR">GBR</option>
-                            </select>
-                        </div>
-                        <ul class="contact_detail text-center text-lg-start">
-                            <li><i class="ti-mobile"></i><span>123-456-7890</span></li>
-                        </ul>
-                    </div>
                 </div>
+
+                <!-- Bên phải -->
                 <div class="col-md-6">
-                	<div class="text-center text-md-end">
-                       	<ul class="header_list">
-                            <li><a href="compare.html"><i class="ti-control-shuffle"></i><span>Compare</span></a></li>
-                        <li>
-                            <a href="{{ route('wishlist.index') }}">
-                                <i class="ti-heart"></i>
-                        <span>Wishlist (<span class="wishlist-count">{{ count(session('wishlist', [])) }}</span>)</span>
-                            </a>
-                        </li>
+                    <div class="text-end">
+                        <ul class="header_list d-inline-flex align-items-center mb-0">
+                            <li>
+                                <a href="{{ route('wishlist.index') }}">
+                                    <i class="ti-heart"></i>
+                                    <span>Yêu thích (<span class="wishlist-count">{{ count(session('wishlist', [])) }}</span>)</span>
+                                </a>
+                            </li>
 
                             @if (Auth::check())
-                                <li class="user-dropdown">
+                                <li class="user-dropdown ms-3">
                                     <a href="#">
                                         <i class="ti-user"></i>
                                         <span>{{ Auth::user()->name }}</span>
@@ -164,29 +146,32 @@
                                                 <button type="submit" class="dropdown-item logout-btn">
                                                     <i class="ti-power-off"></i> Logout
                                                 </button>
-                                                
                                             </form>
 
                                             <form action="{{ route('profile.show') }}" method="GET">
                                                 @csrf
                                                 <button type="submit" class="dropdown-item">
-                                                        <i class="ti-user"></i> Profile
+                                                    <i class="ti-user"></i> Profile
                                                 </button>
                                             </form>
-
                                         </li>
                                     </ul>
                                 </li>
                             @else
-                                <li><a href="{{ route('login') }}"><i class="ti-user"></i><span>Login</span></a></li>
+                                <li class="ms-3">
+                                    <a href="{{ route('login') }}">
+                                        <i class="ti-user"></i>
+                                        <span>Login</span>
+                                    </a>
+                                </li>
                             @endif
                         </ul>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="bottom_header dark_skin main_menu_uppercase">
     	<div class="container">
             <nav class="navbar navbar-expand-lg">
@@ -199,33 +184,28 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                     <ul class="navbar-nav">
+                        <li >
+                            <a  class="nav-link nav_item" href="{{ route('home.index') }}">Trang chủ</a>
+                        </li>
                         <li class="dropdown">
-                            <a data-bs-toggle="dropdown" class="nav-link dropdown-toggle active" href="#">Home</a>
+                            <a class="dropdown-toggle nav-link" href="#" data-bs-toggle="dropdown">Danh mục</a>
                             <div class="dropdown-menu">
                                 <ul>
-                                    <li><a class="dropdown-item nav-link nav_item active" href="index.html">Fashion 1</a></li>
-                                    <li><a class="dropdown-item nav-link nav_item" href="index-2.html">Fashion 2</a></li>
-                                    <li><a class="dropdown-item nav-link nav_item" href="index-3.html">Furniture 1</a></li>
-                                    <li><a class="dropdown-item nav-link nav_item" href="index-4.html">Furniture 2</a></li>
-                                    <li><a class="dropdown-item nav-link nav_item" href="index-5.html">Electronics 1</a></li>
-                                    <li><a class="dropdown-item nav-link nav_item" href="index-6.html">Electronics 2</a></li>
+                                    @forelse($categories as $category)
+                                        <li>
+                                            <a class="dropdown-item nav-link nav_item" href="{{ route('category.show', $category->id) }}">
+                                                {{ $category->name }}
+                                            </a>
+                                        </li>
+                                    @empty
+                                        <li>
+                                            <span class="dropdown-item">Chưa có danh mục</span>
+                                        </li>
+                                    @endforelse
                                 </ul>
                             </div>
                         </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle nav-link" href="#" data-bs-toggle="dropdown">Pages</a>
-                            <div class="dropdown-menu">
-                                <ul>
-                                    <li><a class="dropdown-item nav-link nav_item" href="about.html">About Us</a></li>
-                                    <li><a class="dropdown-item nav-link nav_item" href=""  >Contact Us</a></li>
-                                    <li><a class="dropdown-item nav-link nav_item" href="faq.html">Faq</a></li>
-                                    <li><a class="dropdown-item nav-link nav_item" href="404.html">404 Error Page</a></li>
-                                    <li><a class="dropdown-item nav-link nav_item" href="login.html">Login</a></li>
-                                    <li><a class="dropdown-item nav-link nav_item" href="signup.html">Register</a></li>
-                                    <li><a class="dropdown-item nav-link nav_item" href="term-condition.html">Terms and Conditions</a></li>
-                                </ul>
-                            </div>
-                        </li>
+
                         <li class="dropdown dropdown-mega-menu">
                             <a class="dropdown-toggle nav-link" href="#" data-bs-toggle="dropdown">Products</a>
                             <div class="dropdown-menu">
@@ -233,11 +213,7 @@
                                     <li class="mega-menu-col col-lg-3">
                                         <ul>
                                             <li class="dropdown-header">Woman's</li>
-                                            <li><a class="dropdown-item nav-link nav_item" href="shop-list-left-sidebar.html">Vestibulum sed</a></li>
-                                            <li><a class="dropdown-item nav-link nav_item" href="shop-left-sidebar.html">Donec porttitor</a></li>
-                                            <li><a class="dropdown-item nav-link nav_item" href="shop-right-sidebar.html">Donec vitae facilisis</a></li>
-                                            <li><a class="dropdown-item nav-link nav_item" href="shop-list.html">Curabitur tempus</a></li>
-                                            <li><a class="dropdown-item nav-link nav_item" href="shop-load-more.html">Vivamus in tortor</a></li>
+
                                         </ul>
                                     </li>
                                     <li class="mega-menu-col col-lg-3">
@@ -415,7 +391,7 @@
                                 </ul>
                             </div>
                         </li>
-                        <li><a class="nav-link nav_item" href="{{ route('contact.form')}}">Contact Us</a></li>
+                        <li><a class="nav-link nav_item" href="{{ route('contact.form')}}">Liên hệ</a></li>
                     </ul>
                 </div>
                     <ul class="navbar-nav attr-nav align-items-center">

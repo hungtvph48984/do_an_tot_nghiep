@@ -20,6 +20,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CategoryController as ClientCategoryController;
 use App\Http\Controllers\Client\WishlistController;
 
 
@@ -137,6 +138,11 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 Route::get('/', [HomeController::class, 'index'])->name('home.index'); // Trang chủ
 Route::get('/detail/{id}', [ProductController::class, 'show'])->name('product.detail');
 Route::get('/product/get-variant', [ProductController::class, 'getVariant'])->name('product.getVariant');
+Route::get('/details/{id}', [ProductController::class, 'show'])->name('details');
+Route::get('/products/filter', [ProductController::class, 'filter'])->name('products.filter');
+
+
+
 //Route đăng nhập/ đăng xuất
 Route::get('/login/client', [LoginClientController::class, 'showLoginForm'])->name('login');
 Route::post('/login/client', [LoginClientController::class, 'login'])->name('client.login.submit');
@@ -145,6 +151,12 @@ Route::post('/logout/client', [LoginClientController::class, 'logout'])->name('c
 //Route đăng ký tài khoản khách hàng
 Route::get('/register/client', [RegisterController::class, 'showRegistrationForm'])->name('client.register');
 Route::post('/register/client', [RegisterController::class, 'register'])->name('client.register.submit');
+
+// Danh mục
+Route::get('/category/{id}', [ClientCategoryController::class, 'show'])->name('category.show');
+Route::get('/category/{id}/filter', [ClientCategoryController::class, 'filter'])->name('category.filter');
+
+
 
 // Các route cần đăng nhập
 Route::middleware('auth')->group(function () {
@@ -170,6 +182,9 @@ Route::middleware('auth')->group(function () {
     // Danh sách đơn hàng
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+
+    //lọc đơn hàng
+    Route::get('/orders/filter', [OrderController::class, 'filterOrders'])->name('orders.filter');
 
 
     // Route thanh toán

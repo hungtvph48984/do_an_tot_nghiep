@@ -22,10 +22,15 @@ class Product extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function getMinPriceAttribute()
+    {
+        return $this->variants()->min('price');
+    }
+
     public function getImageUrlAttribute()
-{
-    if (!$this->image) return null;
-    return Storage::url(is_array($this->image) ? $this->image[0] : $this->image);
-}
+    {
+        if (!$this->image) return null;
+        return Storage::url(is_array($this->image) ? $this->image[0] : $this->image);
+    }
 
 }
