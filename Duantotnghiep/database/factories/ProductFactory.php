@@ -3,28 +3,29 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
+
+use App\Models\Category;
+
+
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
  */
 class ProductFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+
     public function definition(): array
     {
         return [
-            'code'  => Str::upper(fake()->bothify('??#####?')),
-            'name'  => fake()->text(25),
-            'image' => 'products/abc.jpg',
-            'description'   => fake()->sentence(),
-            'metarial'  => fake()->text(30),
-            'instrut'   => fake()->text(99),
-            'status'    => rand(0, 1),
-            'category_id'   => rand(1, 4),
+            'code' => $this->faker->unique()->ean13(),
+            'name' => $this->faker->words(3, true),
+            'image' => $this->faker->imageUrl(400, 400, 'products'),
+            'description' => $this->faker->paragraph(),
+            'metarial' => $this->faker->word(),
+            'instrut' => $this->faker->sentence(),
+            'status' => 1,
+            // ✅ Random category_id đã tồn tại, nếu chưa thì tạo mới
+            'category_id' => Category::inRandomOrder()->first()?->id ?? Category::factory(),
+
         ];
     }
 }

@@ -1,8 +1,14 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\Client\LoginClientController;
+use App\Http\Controllers\Client\PaymentController;
+use App\Http\Controllers\Client\RegisterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -23,7 +29,41 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/{category}', [CategoryController::class, 'update'])->name('update'); // admin.categories.update
         Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy'); // admin.categories.destroy
     });
-
 });
-Route::get('/', [HomeController::class, 'index'])->name('home.index'); // home.index
 
+Route::get('/', [HomeController::class, 'index'])->name('home.index'); // Trang chủ
+Route::get('/detail/{id}', [ProductController::class, 'show'])->name('product.detail');
+Route::get('/product/get-variant', [ProductController::class, 'getVariant'])->name('product.getVariant');
+//Route đăng nhập
+Route::get('/login/client', [LoginClientController::class, 'showLoginForm'])->name('login');
+Route::post('/login/client', [LoginClientController::class, 'login'])->name('client.login.submit');
+Route::post('/logout/client', [LoginClientController::class, 'logout'])->name('client.logout');
+
+//Route đăng ký tài khoản khách hàng
+Route::get('/register/client', [RegisterController::class, 'showRegistrationForm'])->name('client.register');
+Route::post('/register/client', [RegisterController::class, 'register'])->name('client.register.submit');
+
+// Các route cần đăng nhập
+Route::middleware('auth')->group(function () {
+    //sản phẩm yêu thích
+
+    // Thêm sản phẩm vào giỏ hàng
+    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+    // Giỏ hàng
+    Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
+    Route::get('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    //hiển thị form thanh toán
+    Route::get('/cart/checkout', [CartController::class, 'showCheckout'])->name('cart.checkout');
+    //Thanh toán
+    Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout.post');
+     Route::get('/order', [OrderController::class, 'index'])->name('orders.index');
+      // tất cả đơn hàng
+    Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
+
+    // Routes cho thanh toán
+    Route::prefix('payment')->name('client.payment.')->group(function () {
+        Route::post('/success', [PaymentController::class, 'paymentSuccess'])->name('success');
+        Route::post('/failed', [PaymentController::class, 'paymentFailed'])->name('failed');
+        Route::post('/cod/{order}', [PaymentController::class, 'processCodPayment'])->name('cod');
+    });
+});
