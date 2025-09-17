@@ -7,13 +7,13 @@
             <i class="fas fa-times-circle"></i>
         </div>
         <h2>Thanh toán thất bại!</h2>
-        
+
         @if(session('error_message'))
             <div class="alert alert-danger mt-3">
                 <strong>Chi tiết lỗi:</strong><br>
                 {{ session('error_message') }}
             </div>
-            
+
             @if(str_contains(session('error_message'), 'thẻ/tài khoản bị khóa'))
                 <div class="alert alert-info mt-3">
                     <strong>Hướng dẫn:</strong><br>
@@ -47,7 +47,7 @@
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         padding: 2rem 1rem;
     }
-    
+
     .result-card {
         background: white;
         border-radius: 20px;
@@ -58,40 +58,40 @@
         width: 100%;
         animation: slideUp 0.6s ease-out;
     }
-    
+
     .result-icon {
         font-size: 4rem;
         margin-bottom: 1.5rem;
         animation: pulse 2s infinite;
     }
-    
+
     .result-card h2 {
         color: #dc3545;
         margin-bottom: 1rem;
         font-weight: 600;
     }
-    
+
     .alert {
         text-align: left;
         border-radius: 10px;
     }
-    
+
     .alert ul {
         padding-left: 1.2rem;
     }
-    
+
     .btn {
         border-radius: 25px;
         padding: 0.75rem 2rem;
         font-weight: 500;
         transition: all 0.3s ease;
     }
-    
+
     .btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
-    
+
     @keyframes slideUp {
         from {
             opacity: 0;
@@ -102,7 +102,7 @@
             transform: translateY(0);
         }
     }
-    
+
     @keyframes pulse {
         0%, 100% {
             transform: scale(1);
