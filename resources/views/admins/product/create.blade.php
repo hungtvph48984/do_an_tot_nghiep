@@ -128,11 +128,6 @@
             </div>
 
             <div class="form-group">
-              <label>Giá sản phẩm</label>
-              <input type="number" name="price" class="form-control" step="0.01">
-            </div>
-
-            <div class="form-group">
               <label>Trạng thái</label>
               <select name="status" class="form-control">
                 <option value="1">Hiển thị</option>
@@ -156,24 +151,16 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  // CKEditor
-  ClassicEditor.create(document.querySelector('#description'))
-    .catch(err => console.error("CKEditor error:", err));
+  ClassicEditor.create(document.querySelector('#description')).catch(err => console.error(err));
 
-  // Khởi tạo Choices
   const sizeChoices  = new Choices("#size-select", { removeItemButton: true });
   const colorChoices = new Choices("#color-select", { removeItemButton: true });
-
-  // Debug để chắc chắn Choices hoạt động
-  console.log("Choices.js initialized:", sizeChoices, colorChoices);
 
   let variantIndex = 0;
 
   document.getElementById("generate-variants").addEventListener("click", function() {
     const sizes  = sizeChoices.getValue();
     const colors = colorChoices.getValue();
-
-    console.log("Clicked! Sizes:", sizes, "Colors:", colors);
 
     if (sizes.length === 0 || colors.length === 0) {
       alert("Vui lòng chọn ít nhất 1 size và 1 màu!");
@@ -195,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
               <input type="hidden" name="variants[${variantIndex}][color_id]" value="${color.value}">
               ${color.label}
             </td>
-            <td><input type="text" name="variants[${variantIndex}][sku]" class="form-control"></td>
+            <td><input type="text" name="variants[${variantIndex}][sku]" class="form-control" placeholder="Tự sinh nếu bỏ trống"></td>
             <td><input type="number" name="variants[${variantIndex}][price]" class="form-control"></td>
             <td><input type="number" name="variants[${variantIndex}][sale_price]" class="form-control"></td>
             <td><input type="number" name="variants[${variantIndex}][stock]" class="form-control"></td>
@@ -208,7 +195,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Xóa biến thể
   document.querySelector("#variants-list").addEventListener("click", e => {
     if (e.target.classList.contains("remove-variant")) {
       e.target.closest("tr").remove();
@@ -216,35 +202,34 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Preview ảnh chính
-document.getElementById("main-image").addEventListener("change", function(e) {
-  let preview = document.getElementById("main-image-preview");
-  preview.innerHTML = "";
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = ev => {
-      preview.innerHTML = `<img src="${ev.target.result}" style="width:100px;height:100px;object-fit:cover;">`;
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-// Preview album
-document.getElementById("album-images").addEventListener("change", function(e) {
-  let preview = document.getElementById("album-preview");
-  preview.innerHTML = "";
-  Array.from(e.target.files).forEach(file => {
-    const reader = new FileReader();
-    reader.onload = ev => {
-      let col = document.createElement("div");
-      col.classList.add("col-4", "mb-2");
-      col.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100px;object-fit:cover;">`;
-      preview.appendChild(col);
-    };
-    reader.readAsDataURL(file);
+  document.getElementById("main-image").addEventListener("change", function(e) {
+    let preview = document.getElementById("main-image-preview");
+    preview.innerHTML = "";
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        preview.innerHTML = `<img src="${ev.target.result}" style="width:100px;height:100px;object-fit:cover;">`;
+      };
+      reader.readAsDataURL(file);
+    }
   });
-});
 
+  // Preview album
+  document.getElementById("album-images").addEventListener("change", function(e) {
+    let preview = document.getElementById("album-preview");
+    preview.innerHTML = "";
+    Array.from(e.target.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        let col = document.createElement("div");
+        col.classList.add("col-4", "mb-2");
+        col.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100px;object-fit:cover;">`;
+        preview.appendChild(col);
+      };
+      reader.readAsDataURL(file);
+    });
+  });
 });
 </script>
 @endpush

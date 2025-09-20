@@ -1,153 +1,185 @@
 @extends('admins.layouts.master')
 
 @section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Danh sách sản phẩm</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">Sản phẩm</li>
-                    </ol>
-                </div>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Danh sách sản phẩm</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item active">Sản phẩm</li>
+                </ol>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <a class="btn btn-info" href="{{ route('admin.products.create') }}">Thêm sản phẩm</a>
-                        </div>
-                        <div class="card-body">
-                            <table id="example1" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Hình ảnh</th>
-                                        <th>Tên sản phẩm</th>
-                                        <th>Danh mục</th>
-                                        <th>Giá thấp nhất</th>
-                                        <th>Tồn kho</th>
-                                        <th>Biến thể</th>
-                                        <th>Trạng thái</th>
-                                        <th>Ngày đăng</th>
-                                        <th>Tùy chỉnh</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($products as $product)
-                                        <tr>
-                                            {{-- Ảnh --}}
-                                            <td>
-                                                @if ($product->image)
-                                                    <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
-                                                         style="width: 50px; height: 50px; object-fit: cover;">
-                                                @else
-                                                    <span>Không có ảnh</span>
-                                                @endif
-                                            </td>
+<section class="content">
+    <div class="container-fluid">
+        @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @endif
 
-                                            {{-- Tên --}}
-                                            <td>{{ $product->name }}</td>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex align-items-center">
+                        <a class="btn btn-info mr-3" href="{{ route('admin.products.create') }}">
+                            <i class="fas fa-plus"></i> Thêm sản phẩm
+                        </a>
+                        <a class="btn btn-warning" href="{{ route('admin.products.hidden') }}">
+                            <i class="fas fa-eye-slash"></i> Sản phẩm đã ẩn
+                        </a>
+                    </div>
 
-                                            {{-- Danh mục --}}
-                                            <td>{{ $product->category->name ?? 'Chưa có danh mục' }}</td>
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Hình ảnh</th>
+                                    <th>Tên</th>
+                                    <th>Danh mục</th>
+                                    <th>Giá </th>
+                                    <th>Tồn kho</th>
+                                    <th>Biến thể</th>
+                                    <th>Trạng thái</th>
+                                    <th>Ngày đăng</th>
+                                    <th>Tùy chỉnh</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($products as $product)
+                                <tr>
+                                    {{-- Ảnh --}}
+                                    <td>
+                                        @if ($product->image)
+                                        <img src="{{ Storage::url($product->image) }}"
+                                            alt="{{ $product->name }}"
+                                            style="width:50px; height:50px; object-fit:cover;">
+                                        @else
+                                        <span>Không có ảnh</span>
+                                        @endif
+                                    </td>
 
-                                            {{-- Giá thấp nhất --}}
-                                            <td>
-                                                @if ($product->variants->count() > 0)
-                                                    {{ number_format($product->variants->min('price'), 0, ',', '.') }} VND
-                                                @else
-                                                    {{ number_format($product->price ?? 0, 0, ',', '.') }} VND
-                                                @endif
-                                            </td>
+                                    {{-- Tên --}}
+                                    <td>{{ $product->name }}</td>
 
-                                            {{-- Tồn kho --}}
-                                            <td>
-                                                @if ($product->variants->count() > 0)
-                                                    {{ $product->variants->sum('stock') }}
-                                                @else
-                                                    0
-                                                @endif
-                                            </td>
+                                    {{-- Danh mục --}}
+                                    <td>{{ $product->category->name ?? 'Chưa có' }}</td>
 
-                                            {{-- Biến thể với tooltip --}}
-                                            <td>
-                                                @if ($product->variants->count() > 0)
-                                                    <span 
-                                                        data-toggle="tooltip" 
-                                                        data-html="true"
-                                                        title="
-                                                            @foreach($product->variants as $variant)
-                                                                Size: {{ $variant->size->name ?? '-' }},
-                                                                Màu: {{ $variant->color->name ?? '-' }},
-                                                                SL: {{ $variant->stock ?? 0 }} <br>
-                                                            @endforeach
-                                                        "
-                                                        style="cursor: pointer; color: #007bff; text-decoration: underline;">
-                                                        {{ $product->variants->count() }} biến thể
-                                                    </span>
-                                                @else
-                                                    <span>Không có</span>
-                                                @endif
-                                            </td>
+                                    {{-- Giá từ min–max --}}
+                                    <td>
+                                        @if ($product->variants->count() > 0)
+                                            @if ($product->min_price == $product->max_price)
+                                                {{ number_format($product->min_price, 0, ',', '.') }} VND
+                                            @else
+                                                {{ number_format($product->min_price, 0, ',', '.') }}
+                                                – {{ number_format($product->max_price, 0, ',', '.') }} VND
+                                            @endif
+                                        @else
+                                            {{ number_format($product->price ?? 0, 0, ',', '.') }} VND
+                                        @endif
+                                    </td>
 
-                                            {{-- Trạng thái --}}
-                                            <td>
-                                                @if ($product->status == 1)
-                                                    <span class="badge bg-success">Hiển thị</span>
-                                                @else
-                                                    <span class="badge bg-secondary">Ẩn</span>
-                                                @endif
-                                            </td>
+                                    {{-- Tổng tồn kho --}}
+                                    <td>
+                                        @if ($product->variants->count() > 0)
+                                            {{ $product->variants->sum('stock') }}
+                                        @else
+                                            0
+                                        @endif
+                                    </td>
 
-                                            {{-- Ngày --}}
-                                            <td>{{ $product->created_at->format('d/m/Y H:i') }}</td>
+                                    {{-- Biến thể --}}
+                                    <td>
+                                        @if ($product->variants->count() > 0)
+                                        <span data-toggle="tooltip"
+                                            data-html="true"
+                                            title="@foreach($product->variants as $v) Size: {{ $v->size->name ?? '-' }}, Màu: {{ $v->color->name ?? '-' }}, SL: {{ $v->stock ?? 0 }} <br> @endforeach"
+                                            style="cursor:pointer; color:#007bff; text-decoration:underline;">
+                                            {{ $product->variants->count() }} biến thể
+                                        </span>
+                                        @else
+                                        Không có
+                                        @endif
+                                    </td>
 
-                                            {{-- Hành động --}}
-                                            <td>
-                                            <a href="{{ route('admin.products.show', $product->id) }}" class="btn btn-sm btn-info">Xem</a>
-                                                <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-primary">Sửa</a>
-                                                <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">Xóa</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="9" class="text-center">Không có sản phẩm nào.</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                                    {{-- Trạng thái --}}
+                                    <td>
+                                        <form action="{{ route('admin.products.toggleStatus', $product->id) }}"
+                                            method="POST" class="toggle-status-form">
+                                            @csrf
+                                            @method('PATCH')
+                                            <div class="custom-control custom-switch d-flex align-items-center">
+                                                <input type="checkbox" class="custom-control-input toggle-checkbox"
+                                                    id="toggleStatus{{ $product->id }}" {{ $product->status ? 'checked' : '' }}>
+                                                <label class="custom-control-label" for="toggleStatus{{ $product->id }}"></label>
+                                                <span class="ml-2 badge {{ $product->status ? 'badge-success' : 'badge-secondary' }}">
+                                                    {{ $product->status ? 'Hiển thị' : 'Đã ẩn' }}
+                                                </span>
+                                            </div>
+                                        </form>
+                                    </td>
+
+                                    {{-- Ngày --}}
+                                    <td>{{ $product->created_at->format('d/m/Y H:i') }}</td>
+
+                                    {{-- Hành động --}}
+                                    <td class="text-center">
+                                        <a href="{{ route('admin.products.show', $product->id) }}" class="btn btn-sm btn-info" title="Xem">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-primary" title="Sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="9" class="text-center">Không có sản phẩm nào.</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Phân trang -->
+                    <div class="card-footer clearfix">
+                        {{ $products->links() }}
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 @endsection
 
 @push('scripts')
 <script>
-    $(function () {
-        $("#example1").DataTable({
-            "responsive": true,
-            "autoWidth": false,
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Vietnamese.json"
-            }
-        });
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.toggle-checkbox').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function(e) {
+                e.preventDefault();
+                const form = this.closest('form');
+                const isActive = this.checked;
+                const confirmMessage = isActive ?
+                    'Bạn có chắc chắn muốn hiển thị sản phẩm này không?' :
+                    'Bạn có chắc chắn muốn ẩn sản phẩm này không?';
 
-        // Kích hoạt tooltip
-        $('[data-toggle="tooltip"]').tooltip();
+                if (confirm(confirmMessage)) {
+                    form.submit();
+                } else {
+                    this.checked = !this.checked;
+                }
+            });
+        });
     });
 </script>
 @endpush
