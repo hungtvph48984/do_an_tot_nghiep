@@ -4,12 +4,22 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
+<<<<<<< HEAD
+            <h1 class="m-0">huyyyyyyyyy</h1>
+=======
             <h1 class="m-0">Dashboard</h1>
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
+<<<<<<< HEAD
+              <li class="breadcrumb-item active">
+                <a href="{{ url('admin') }}" class="nav-link">  
+              Dashboard v1</li>
+=======
               <li class="breadcrumb-item active">Dashboard v1</li>
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->

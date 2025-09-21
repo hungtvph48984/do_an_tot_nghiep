@@ -49,9 +49,12 @@ class User extends Authenticatable
         ];
     }
 
+<<<<<<< HEAD
+=======
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
 }

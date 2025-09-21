@@ -1,6 +1,20 @@
 <?php
 namespace App\Models;
 
+<<<<<<< HEAD
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['name', 'description', 'base_price'];
+
+    public function variants()
+    {
+        return $this->hasMany(Variant::class);
+=======
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -22,10 +36,17 @@ class Product extends Model
     public function variants()
     {
         return $this->hasMany(ProductVariant::class, 'product_id');
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
     }
 
     public function category()
     {
+<<<<<<< HEAD
+        return $this->belongsTo(Category::class);
+    }
+
+}
+=======
         return $this->belongsTo(Category::class, 'category_id');
     }
 
@@ -62,3 +83,4 @@ class Product extends Model
         return $variants->max(fn($v) => $v->effective_price);
     }
 }
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8

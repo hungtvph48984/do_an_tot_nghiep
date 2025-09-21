@@ -1,6 +1,16 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+<<<<<<< HEAD
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class ProductController extends Controller
+{
+     public function index()
+    {
+        return view('admins.product.index');
+=======
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
@@ -225,6 +235,7 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã bị xóa.');
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
     }
 
     // ProductController.php

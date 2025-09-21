@@ -26,6 +26,10 @@
 <!-- thêm js nếu cần -->
 <script src="{{ asset('admins/plugins/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('admins/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<<<<<<< HEAD
+
+@yield('scripts')
+=======
 <script>
     // ẩn thông báo sau 3 giây
     setTimeout(function () {
@@ -41,6 +45,7 @@
 @yield('scripts')
 @stack('scripts')
 
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
 
 </body>
 </html>

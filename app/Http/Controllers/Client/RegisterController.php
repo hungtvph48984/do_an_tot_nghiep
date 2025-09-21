@@ -12,7 +12,11 @@ class RegisterController extends Controller
 {
     public function showRegistrationForm()
     {
+<<<<<<< HEAD
+        return view('client.register');
+=======
         return view('clients.register');
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
     }
 
     public function register(Request $request)
@@ -35,11 +39,19 @@ class RegisterController extends Controller
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
+<<<<<<< HEAD
+            'role'     => 'user', 
+=======
             'role'     => 'user',
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
         ]);
 
         Auth::login($user); // đăng nhập luôn sau khi đăng ký
 
+<<<<<<< HEAD
+        return redirect('/client')->with('success', 'Đăng ký thành công!');
+=======
         return redirect('/')->with('success', 'Đăng ký thành công!');
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
     }
 }

@@ -10,6 +10,8 @@
 
     </ul>
 
+<<<<<<< HEAD
+=======
     <!-- SEARCH FORM -->
     <form class="form-inline ml-3">
       <div class="input-group input-group-sm">
@@ -22,5 +24,6 @@
       </div>
     </form>
 
+>>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
 
   </nav>
