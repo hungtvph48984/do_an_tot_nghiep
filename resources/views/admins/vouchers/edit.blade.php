@@ -20,52 +20,64 @@
 
         <div class="mb-3">
             <label class="form-label">Tên Voucher</label>
-            <input type="text" name="name" class="form-control" value="{{ old('name', $voucher->name) }}" required>
+            <input type="text" name="name" class="form-control"
+                   value="{{ old('name', $voucher->name) }}" required>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Mã Voucher</label>
-            <input type="text" class="form-control" value="{{ $randomCode }}" disabled>
-            <input type="hidden" name="random_code" value="{{ $randomCode }}">
-            <small class="text-muted">Mã voucher được sinh ngẫu nhiên khi cập nhật</small>
+            {{-- Hiển thị mã hiện tại, readonly, không submit --}}
+            <input type="text" class="form-control"
+                   value="{{ $voucher->code }}" readonly>
+            <small class="text-muted">Mã voucher không thể thay đổi</small>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Loại Voucher</label>
             <select name="type" class="form-select" required>
-                <option value="fixed" {{ old('type', $voucher->type) == 'fixed' ? 'selected' : '' }}>Giảm giá cố định</option>
-                <option value="percent" {{ old('type', $voucher->type) == 'percent' ? 'selected' : '' }}>Giảm giá theo phần trăm</option>
+                <option value="fixed" {{ old('type', $voucher->type) == 'fixed' ? 'selected' : '' }}>
+                    Giảm giá cố định
+                </option>
+                <option value="percent" {{ old('type', $voucher->type) == 'percent' ? 'selected' : '' }}>
+                    Giảm giá theo phần trăm
+                </option>
             </select>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Giá trị giảm</label>
-            <input type="number" name="sale_price" class="form-control" value="{{ old('sale_price', $voucher->sale_price) }}" required>
+            <input type="number" name="sale_price" class="form-control"
+                   value="{{ old('sale_price', $voucher->sale_price) }}" required>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Đơn hàng tối thiểu</label>
-            <input type="number"  name="min_order" class="form-control" value="{{ old('min_order', $voucher->min_order) }}" required>
+            <input type="number" name="min_order" class="form-control"
+                   value="{{ old('min_order', $voucher->min_order) }}" required>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Giá trị giảm tối đa</label>
-            <input type="number"  name="max_price" class="form-control" value="{{ old('max_price', $voucher->max_price) }}" required>
+            <input type="number" name="max_price" class="form-control"
+                   value="{{ old('max_price', $voucher->max_price) }}">
         </div>
 
         <div class="mb-3">
             <label class="form-label">Số lượng</label>
-            <input type="number" name="quantity" class="form-control" value="{{ old('quantity', $voucher->quantity) }}" required>
+            <input type="number" name="quantity" class="form-control"
+                   value="{{ old('quantity', $voucher->quantity) }}" required>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Ngày bắt đầu</label>
-            <input type="datetime-local" name="start_date" class="form-control" value="{{ old('start_date', $voucher->start_date->format('Y-m-d\TH:i')) }}" required>
+            <input type="datetime-local" name="start_date" class="form-control"
+                   value="{{ old('start_date', $voucher->start_date->format('Y-m-d\TH:i')) }}" required>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Ngày kết thúc</label>
-            <input type="datetime-local" name="end_date" class="form-control" value="{{ old('end_date', $voucher->end_date->format('Y-m-d\TH:i')) }}" required>
+            <input type="datetime-local" name="end_date" class="form-control"
+                   value="{{ old('end_date', $voucher->end_date->format('Y-m-d\TH:i')) }}" required>
         </div>
 
         <button type="submit" class="btn btn-success">Cập nhật Voucher</button>

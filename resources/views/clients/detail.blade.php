@@ -40,7 +40,7 @@
                         <h4 class="product_title">{{ $product->name }}</h4>
                         <div class="product_price">
                             <span class="price" id="variant-price">
-                                {{ number_format($product->variants->min('price')) }} $
+                                {{ number_format($product->variants->min('price')) }} đ 
                             </span>
                             <del id="variant-old-price"></del>
                         </div>
@@ -97,33 +97,65 @@
             </div>
         </div>
 
-        {{-- ====== Sản phẩm liên quan ====== --}}
-        <div class="row mt-5">
-            <div class="col-12">
-                <h3 class="heading_s1">Sản phẩm liên quan</h3>
-                <div class="product_slider carousel_slider owl-carousel owl-theme" data-margin="20" data-loop="true">
-                    @foreach ($productRelead as $item)
-                        <div class="item">
-                            <div class="product">
-                                <div class="product_img">
-                                    <a href="{{ route('product.detail', $item->id) }}">
-                                        <img src="{{ Storage::url($item->image) }}" alt="{{ $item->name }}">
-                                    </a>
-                                </div>
-                                <div class="product_info">
-                                    <h6 class="product_title">{{ $item->name }}</h6>
-                                    <div class="product_price">
-                                        <span class="price">
-                                            {{ number_format($item->variants->min('price')) }} $
+    {{-- ====== Sản phẩm liên quan ====== --}}
+    <div class="section mt-5">
+        <div class="container">
+            <h3 class="fw-bold mb-4">Sản phẩm liên quan</h3>
+            @if($relatedProducts->count())
+                <div class="row g-4">
+                    @foreach($relatedProducts as $product)
+                        <div class="col-md-3 col-sm-6">
+                            <div class="card product-card border-0 shadow-sm h-100">
+                                {{-- Hình --}}
+                                <a href="{{ route('details', $product->id) }}" class="position-relative">
+                                    <img src="{{ asset('storage/'.$product->image) }}" 
+                                        class="card-img-top" 
+                                        alt="{{ $product->name }}"
+                                        style="height:220px;object-fit:cover;">
+                                    @if($product->old_price && $product->old_price > $product->min_price)
+                                        <span class="badge bg-danger position-absolute top-0 start-0 m-2">
+                                            -{{ round(100 - ($product->min_price/$product->old_price*100)) }}%
                                         </span>
+                                    @endif
+                                </a>
+
+                                {{-- Nội dung --}}
+                                <div class="card-body text-center">
+                                    <h6 class="card-title fw-bold text-truncate mb-1">
+                                        <a href="{{ route('details', $product->id) }}" class="text-dark text-decoration-none">
+                                            {{ $product->name }}
+                                        </a>
+                                    </h6>
+                                    <div class="price-block">
+                                        <span class="text-danger fw-bold">
+                                            {{ number_format($product->min_price,0,',','.') }}₫
+                                        </span>
+                                        @if($product->old_price && $product->old_price > $product->min_price)
+                                            <small class="text-muted text-decoration-line-through ms-1">
+                                                {{ number_format($product->old_price,0,',','.') }}₫
+                                            </small>
+                                        @endif
                                     </div>
+                                    <small class="text-muted d-block">
+                                        +{{ $product->colors_count ?? 0 }} Màu | +{{ $product->sizes_count ?? 0 }} Size
+                                    </small>
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
-            </div>
+            @else
+                <div class="alert alert-info">Không có sản phẩm liên quan.</div>
+            @endif
         </div>
+    </div>
+
+
+
+
+    </div>
+</div>
+
 
     </div>
 </div>
@@ -165,3 +197,12 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 @endsection
+
+@push('styles')
+<style>
+.product-card img { transition: transform .3s ease; }
+.product-card:hover img { transform: scale(1.05); }
+.product-card .badge { font-size: .75rem; }
+</style>
+@endpush
+

@@ -5,128 +5,206 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Size; // nếu chưa có model Size thì có thể xoá dòng này
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function index()
+    /**
+     * (Tuỳ chọn) Trang tất cả sản phẩm
+     */
+    public function index(Request $request)
     {
-        //Lấy tất cả sản phẩm
-        $products = Product::all();
-
-        //Lấy dữ liệu có phân trang, sắp xếp
         $products = Product::query()
-            ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->withMin('variants as min_price', 'price')
+            ->withMax('variants as max_price', 'price')
+            ->orderBy('created_at', 'desc')
+            ->paginate(12)
+            ->withQueryString();
 
-        //Tìm kiếm, câu lệnh có điều kiện
-        $products = Product::query()
-            ->where('category_id', 2)
-            ->where('name', 'LIKE',  '%ve%')
-            ->get();
+        // Chuẩn hoá old_price nếu bạn chưa có compare_price
+        $products->getCollection()->transform(function ($p) {
+            $p->old_price = $p->max_price;
+            return $p;
+        });
+        
 
-        //Lấy ra 1 phần tử
-        $products = Product::query()
-            ->where('category_id', 2)
-            ->where('name', 'LIKE',  '%ve%')
-            ->first();
-
-        //Lấy 1 phần tử theo id
-        $products = Product::query()->find(2);
-
-        //Thống kê
-        //Đếm số lượng sản phẩm
-        $product_count = Product::query()->count();
-
-        //Tính trung bình (giá trung bình)
-        $product_count = ProductVariant::query()
-            ->avg('price');
-
-        $product_count = ProductVariant::query()->sum('price');
-
-        //Thống kê số lượng sản phẩm trong danh mục
-        $product_count = Product::query()
-            ->select('category_id', DB::raw('count(*) '))
-            ->groupBy('category_id')
-            ->get();
-
-        return $product_count;
-        return $products;
+        return view('clients.products.index', compact('products'));
     }
 
-    public function list()
+    public function search(Request $request)
     {
-        //Lazy loading
-        $products = Product::query()->paginate(10);
+        $searchTerm = $request->input('search');
+        
+        // Lọc sản phẩm theo tên (sử dụng LIKE để tìm kiếm gần đúng)
+        $products = Product::where('name', 'like', '%' . $searchTerm . '%')
+            ->withMin('variants as min_price', 'price')
+            ->withMax('variants as max_price', 'price')
+            ->paginate(12);
+        
+        // Lấy tất cả các size
+        $sizes = Size::all(); // Hoặc sử dụng cách khác nếu bạn có cách lấy sizes khác
 
-        $categories = Category::query()->get();
-
-        return view('test', compact('categories', 'products'));
+        // Trả về view với sản phẩm tìm thấy, từ khóa tìm kiếm và sizes
+        return view('clients.products.index', compact('products', 'searchTerm', 'sizes'));
     }
 
-    public function listEagerLoading()
-    {
-        // $products = Product::with('category')->paginate(8);
 
-        $products = Product::with(['variants.color', 'variants.size'])
-            ->paginate(8);
-        // return $products;
-        return view('test2', compact('products'));
+
+
+    public function categoryShow(Category $category, Request $request)
+    {
+        // Validate nhẹ
+        $request->validate([
+            'min_price' => 'nullable|integer|min:0',
+            'max_price' => 'nullable|integer|min:0',
+            'sizes'     => 'nullable|array',
+            'sizes.*'   => 'integer',
+            'sort'      => 'nullable|in:price_asc,price_desc,name_asc,name_desc,newest,oldest',
+        ]);
+
+        // Size cho sidebar (nếu chưa có bảng sizes thì truyền collect())
+        $sizes = class_exists(Size::class)
+            ? Size::query()->orderBy('name')->get()
+            : collect();
+
+        $query = Product::query()
+            ->where('category_id', $category->id)
+            ->withMin('variants as min_price', 'price')
+            ->withMax('variants as max_price', 'price')
+            ->withCount([
+                'variants as sizes_count'  => fn($q) => $q->select(DB::raw('COUNT(DISTINCT size_id)')),
+                'variants as colors_count' => fn($q) => $q->select(DB::raw('COUNT(DISTINCT color_id)')),
+            ]);
+
+        // Lọc giá theo variants.price
+        $min = $request->integer('min_price');
+        $max = $request->integer('max_price');
+        if ($min || $max) {
+            $query->whereHas('variants', function ($q) use ($min, $max) {
+                if ($min) $q->where('price', '>=', $min);
+                if ($max) $q->where('price', '<=', $max);
+            });
+        }
+
+        // Lọc size (tham số: sizes[] là mảng id)
+        $sizesFilter = (array) $request->input('sizes', []);
+        if (!empty($sizesFilter)) {
+            $query->whereHas('variants', fn($q) => $q->whereIn('size_id', $sizesFilter));
+        }
+
+        // Sắp xếp
+        switch ($request->input('sort')) {
+            case 'price_asc':  $query->orderBy('min_price', 'asc');  break;
+            case 'price_desc': $query->orderBy('min_price', 'desc'); break;
+            case 'name_asc':   $query->orderBy('name', 'asc');       break;
+            case 'name_desc':  $query->orderBy('name', 'desc');      break;
+            case 'newest':     $query->orderBy('created_at', 'desc');break;
+            case 'oldest':     $query->orderBy('created_at', 'asc'); break;
+            default:           $query->orderBy('created_at', 'desc');
+        }
+
+        $products = $query->paginate(15)->withQueryString();
+
+        // Nếu không có compare_price → tạm dùng max_price làm old_price cho view
+        $products->getCollection()->transform(function ($p) {
+            if (!isset($p->old_price)) {
+                $p->old_price = $p->max_price;
+            }
+            return $p;
+        });
+
+        $allCategories = Category::query()
+        ->where('is_active', 1) 
+        ->orderBy('name')
+        ->get();
+
+        return view('clients.category.show', [
+            'category' => $category,
+            'products' => $products, // Paginator → links() OK
+            'sizes'    => $sizes,
+            'allCategories' => $allCategories,
+        ]);
+
     }
 
     public function show($id)
     {
+        return $this->details($id);
+    }
+
+    public function details($id)
+    {
+        // Lấy sản phẩm chi tiết
         $product = Product::with([
             'variants.color',
             'variants.size' => function ($query) {
                 $query->orderBy('name', 'asc');
-            }
-        ])
-            ->where('id', $id)
-            ->first();
+            },
+            'category'
+        ])->findOrFail($id);
 
-        //sắp xếp theo tên size
-        // $product->variants = $product->variants->sortBy('size.name')->values();
-        if ($product) {
-            $product->variants = $product->variants->sortBy(function ($variant) {
-                return optional($variant->size)->name;
-            })->values();
+        // Sắp xếp variant theo size
+        if ($product->variants) {
+            $product->variants = $product->variants
+                ->sortBy(fn($variant) => optional($variant->size)->name)
+                ->values();
         }
-        //Sản phẩm liên quan
-        $productRelead = Product::with(['variants.color', 'variants.size'])
+
+        // Lấy sản phẩm liên quan (cùng danh mục, khác id hiện tại)
+        $relatedProducts = Product::query()
+            ->withMin('variants as min_price', 'price')
+            ->withMax('variants as max_price', 'price')
+            ->withCount([
+                'variants as sizes_count'  => fn($q) => $q->select(DB::raw('COUNT(DISTINCT size_id)')),
+                'variants as colors_count' => fn($q) => $q->select(DB::raw('COUNT(DISTINCT color_id)')),
+            ])
             ->where('category_id', $product->category_id)
-            ->where('id', '!=', $id)
-            ->limit(4)
+            ->where('id', '<>', $product->id)
+            ->take(12)
             ->get();
 
-        return view('clients.detail', compact('product', 'productRelead'));
+        // Chuẩn hoá old_price nếu chưa có compare_price
+        $relatedProducts->transform(function ($p) {
+            if (!isset($p->old_price)) {
+                $p->old_price = $p->max_price;
+            }
+            return $p;
+        });
 
-
+        return view('clients.detail', compact('product', 'relatedProducts'));
     }
 
+
+    /** API: lấy giá theo thuộc tính */
     public function getAttributePrice(Request $request)
     {
+        $request->validate([
+            'product_id' => 'required|integer',
+            'color_id'   => 'required|integer',
+            'size_id'    => 'required|integer',
+        ]);
+
         $variant = ProductVariant::query()
             ->where('product_id', $request->product_id)
             ->where('color_id', $request->color_id)
             ->where('size_id', $request->size_id)
             ->first();
+
         if (!$variant) {
-            return response()->json([
-                'error' => 'Variant not found',
-                // 'price' => 'Liên hệ'
-            ], 404);
+            return response()->json(['error' => 'Variant not found'], 404);
         }
-        //Lấy giá của sản phẩm
         return response()->json($variant);
     }
 
+    /** API: lấy biến thể theo id */
     public function getVariant(Request $request)
     {
-        $variantId = $request->input('variant_id');
+        $request->validate(['variant_id' => 'required|integer']);
 
-        $variant = ProductVariant::with(['product', 'size', 'color'])->find($variantId);
+        $variant = ProductVariant::with(['product', 'size', 'color'])
+            ->find($request->input('variant_id'));
 
         if (!$variant) {
             return response()->json(['error' => 'Variant not found'], 404);
@@ -135,33 +213,36 @@ class ProductController extends Controller
         return response()->json($variant);
     }
 
-    //lọc sản phẩm bên danh mục
+    /**
+     * (Không cần nữa) — nếu bạn vẫn dùng filter cũ, đảm bảo cũng paginate và truyền $category
+     */
     public function filter(Request $request)
     {
         $query = Product::with(['variants.size', 'variants.color']);
 
-        // Lọc theo danh mục
         if ($request->category_id) {
             $query->where('category_id', $request->category_id);
         }
 
-        // Lọc theo giá (nằm ở bảng product_variants)
         if ($request->min_price && $request->max_price) {
             $query->whereHas('variants', function ($q) use ($request) {
                 $q->whereBetween('price', [$request->min_price, $request->max_price]);
             });
         }
 
-        // Lọc theo size
         if ($request->size_id) {
-            $query->whereHas('variants', function ($q) use ($request) {
-                $q->whereIn('size_id', (array) $request->size_id);
-            });
+            $query->whereHas('variants', fn($q) => $q->whereIn('size_id', (array) $request->size_id));
         }
 
-        $products = $query->paginate(12);
+        $products = $query->paginate(12)->withQueryString();
 
-        return view('clients.category.show', compact('products'));
+        // Lấy category để view không lỗi
+        $category = $request->category_id ? Category::find($request->category_id) : null;
+        $sizes = class_exists(Size::class) ? Size::query()->orderBy('name')->get() : collect();
+
+        return view('clients.category.show', compact('products', 'category', 'sizes'));
     }
 
+    
+    
 }

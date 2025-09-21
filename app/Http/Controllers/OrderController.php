@@ -112,5 +112,31 @@ class OrderController extends Controller
         return view('clients.profile.profile', compact('orders'));
     }
 
+    public function confirmReceived($id)
+    {
+        $order = Order::where('user_id', Auth::id())->findOrFail($id);
+
+        if ($order->status == Order::STATUS_SHIPPING) {
+            $order->update([
+                'status' => Order::STATUS_DELIVERED,
+                'delivered_at' => now(), // bạn nên thêm cột này trong db
+            ]);
+        }
+
+        return back()->with('success', 'Xác nhận đã nhận hàng thành công!');
+    }
+
+    public function requestReturn($id)
+    {
+        $order = Order::where('user_id', Auth::id())->findOrFail($id);
+
+        if ($order->status == Order::STATUS_DELIVERED && $order->updated_at->diffInDays(now()) <= 7) {
+            $order->update(['status' => Order::STATUS_RETURNED]);
+        }
+
+        return back()->with('success', 'Yêu cầu trả hàng/hoàn tiền đã được gửi.');
+    }
+
+
 
 }

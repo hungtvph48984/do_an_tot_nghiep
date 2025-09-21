@@ -17,7 +17,7 @@ class Order extends Model
         'status',
         'payment_method',
         'total',
-        'vorcher_code',
+        'voucher_code',
         'sale_price',
         'pay_amount',
         'note'
@@ -89,6 +89,21 @@ class Order extends Model
     {
         $payments = self::getPaymentOptions();
         return $payments[$this->payment_method] ?? 'Không xác định';
+    }
+    
+    // Kiểm tra trạng thái để cho phép hành động
+    public function canConfirmReceived(): bool
+    {
+        return $this->status == self::STATUS_SHIPPING;
+    }
+
+    public function canRequestReturn(): bool
+    {
+        if ($this->status != self::STATUS_DELIVERED) {
+            return false;
+        }
+        // kiểm tra trong 7 ngày kể từ khi delivered
+        return $this->updated_at->diffInDays(now()) <= 7;
     }
 
     // Boot
