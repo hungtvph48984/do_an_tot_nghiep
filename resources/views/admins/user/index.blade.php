@@ -76,11 +76,9 @@
                                         <td>{{ $user->created_at->format('d/m/Y') }}</td>
                                         <td>
                                             <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning btn-sm">
-<<<<<<< HEAD
-                                                <i class="fas fa-edit"></i> Sửa
-=======
-                                                <i class=""></i> Sửa
->>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
+
+                                                <i class=""></i> Xem
+
                                             </a>
 
                                         </td>

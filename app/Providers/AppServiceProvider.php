@@ -3,35 +3,37 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-<<<<<<< HEAD
-use Illuminate\Pagination\Paginator;
 
-class AppServiceProvider extends ServiceProvider
-{
-=======
+use Illuminate\Support\Facades\View;
+use App\Models\Category;
+
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
->>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
+
     public function register(): void
     {
         //
     }
 
-<<<<<<< HEAD
-    public function boot(): void
-    {
-        Paginator::useBootstrap(); 
-=======
+
     /**
      * Bootstrap any application services.
      */
     public function boot(): void
     {
-        //
->>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
+
+        // Chia sẻ biến $categories cho tất cả view trong clients.layouts.*
+        View::composer('clients.layouts.*', function ($view) {
+            $categories = Category::where('is_active', true)
+                ->orderBy('id', 'desc')
+                ->get();
+
+            $view->with('categories', $categories);
+        });
+
     }
 }

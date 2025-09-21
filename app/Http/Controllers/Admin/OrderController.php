@@ -46,7 +46,7 @@ public function index(Request $request)
         $query->latest(); // Mặc định sắp xếp theo ngày tạo giảm dần
     }
 
-    $orders = $query->paginate(10);
+    $orders = $query->paginate(5);
 
     return view('admins.orders.index', compact('orders'));
 }

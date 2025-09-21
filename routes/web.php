@@ -31,6 +31,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CategoryController as ClientCategoryController;
 use App\Http\Controllers\Client\WishlistController;
 >>>>>>> ef97e0d6fd0e636da8df978d1157cfe6edf30bc8
 
@@ -214,6 +215,24 @@ Route::middleware('auth')->group(function () {
 Route::get('/', [HomeController::class, 'index'])->name('home.index'); // Trang chủ
 Route::get('/detail/{id}', [ProductController::class, 'show'])->name('product.detail');
 Route::get('/product/get-variant', [ProductController::class, 'getVariant'])->name('product.getVariant');
+Route::get('/details/{id}', [ProductController::class, 'show'])->name('details');
+Route::get('/products/filter', [ProductController::class, 'filter'])->name('products.filter');
+
+Route::get('/category/{category}', [ProductController::class, 'categoryShow'])
+    ->name('category.show');
+
+// Trang chi tiết sản phẩm
+Route::get('/products/{id}', [ProductController::class, 'details'])
+    ->name('details');
+
+// (tuỳ chọn) trang tất cả sản phẩm
+Route::get('/products', [ProductController::class, 'index'])
+    ->name('products.index');
+// Tìm kiếm sản phẩm
+Route::get('/search', [ProductController::class, 'search'])->name('product.search');
+
+    
+
 //Route đăng nhập/ đăng xuất
 Route::get('/login/client', [LoginClientController::class, 'showLoginForm'])->name('login');
 Route::post('/login/client', [LoginClientController::class, 'login'])->name('client.login.submit');
@@ -222,6 +241,12 @@ Route::post('/logout/client', [LoginClientController::class, 'logout'])->name('c
 //Route đăng ký tài khoản khách hàng
 Route::get('/register/client', [RegisterController::class, 'showRegistrationForm'])->name('client.register');
 Route::post('/register/client', [RegisterController::class, 'register'])->name('client.register.submit');
+
+// Danh mục
+Route::get('/category/{id}', [ClientCategoryController::class, 'show'])->name('category.show');
+Route::get('/category/{id}/filter', [ClientCategoryController::class, 'filter'])->name('category.filter');
+
+
 
 // Các route cần đăng nhập
 Route::middleware('auth')->group(function () {
@@ -248,11 +273,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
 
+    //lọc đơn hàng
+    Route::get('/orders/filter', [OrderController::class, 'filterOrders'])->name('orders.filter');
+
+    // Xác nhận đã nhận hàng và hủy hàng    
+    Route::put('/orders/{id}/confirm-received', [OrderController::class, 'confirmReceived'])->name('orders.confirmReceived');
+    Route::put('/orders/{id}/request-return', [OrderController::class, 'requestReturn'])->name('orders.requestReturn');
+
+
 
     // Route thanh toán
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     // Route mã giảm giá
-    Route::post('/apply-coupon', [CouponController::class, 'apply'])->name('apply.coupon');
+    Route::post('/apply-coupon', [CouponController::class, 'apply'])->name('cart.applyCoupon');
 
     // ✅ Route liên hệ
     Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.form');
