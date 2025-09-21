@@ -3,14 +3,17 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+
 use App\Models\Color;
 use App\Models\Size;
+
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProductVariant>
  */
 class ProductVariantFactory extends Factory
 {
+
     public function definition(): array
     {
         return [
@@ -20,6 +23,8 @@ class ProductVariantFactory extends Factory
             'sale' => $this->faker->randomFloat(2, 50, 500),
             'stock' => $this->faker->numberBetween(0, 100),
             'image' => $this->faker->imageUrl(400, 400, 'variants'),
+
+    
         ];
     }
 }

@@ -3,13 +3,16 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+
 use App\Models\Category;
+
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
  */
 class ProductFactory extends Factory
 {
+
     public function definition(): array
     {
         return [
@@ -22,6 +25,7 @@ class ProductFactory extends Factory
             'status' => 1,
             // ✅ Random category_id đã tồn tại, nếu chưa thì tạo mới
             'category_id' => Category::inRandomOrder()->first()?->id ?? Category::factory(),
+
         ];
     }
 }
