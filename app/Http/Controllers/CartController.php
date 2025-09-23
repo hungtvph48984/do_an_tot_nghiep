@@ -95,22 +95,24 @@ class CartController extends Controller
         $paymentMethod = $paymentMap[$request->input('payment')] ?? 0;
 
         // Tạo đơn hàng
-        $order = Order::create([
-            'user_id' => Auth::id(),
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'province_id' => $request->province_id,
-            'district_id' => $request->district_id,
-            'ward_code' => $request->ward_code,
-            'address' => $request->address,
-            'note' => $request->note,
-            'total' => $totalPrice,
-            'pay_amount' => $totalPrice,
-            'status' => 0,
-            'payment_method' => $paymentMethod,
-            'payment_status' => 0, // 0 = unpaid
-        ]);
+       
+$order = Order::create([
+    'user_id'        => Auth::id(),
+    'name'           => $request->name,
+    'email'          => $request->email,
+    'phone'          => $request->phone,
+    'province_id'    => $request->province_id,
+    'district_id'    => $request->district_id,
+    'ward_id'        => $request->ward_id, // 
+    'address'        => $request->address,
+    'note'           => $request->note,
+    'total'          => $totalPrice,
+    'pay_amount'     => $totalPrice,
+    'status'         => 0,
+    'payment_method' => $paymentMethod,
+    'payment_status' => 'unpaid', // 
+]);
+
 
         // Lưu chi tiết đơn hàng
         foreach ($cart as $item) {

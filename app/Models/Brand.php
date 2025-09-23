@@ -18,34 +18,33 @@ class Brand extends Model
         'website',
         'email',
         'phone',
-        'status'
+        'status',
     ];
 
     protected $casts = [
-        'status' => 'boolean',
+        'status'     => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
-    // Relationship with products
+    /** ================== RELATIONSHIPS ================== */
+    // 1 thương hiệu có nhiều sản phẩm
     public function products()
     {
-        return $this->hasMany(Product::class);
-        // Hoặc nếu bạn sử dụng tên khác:
-        // return $this->hasMany(Product::class, 'brand_id');
+        return $this->hasMany(Product::class, 'brand_id');
     }
 
-    // Accessor for logo URL
+    /** ================== ACCESSORS ================== */
+    // Lấy link đầy đủ của logo
     public function getLogoUrlAttribute()
     {
-        if ($this->logo) {
-            return Storage::disk('public')->url($this->logo);
-        }
-        
-        return asset('admin/images/brand-placeholder.png'); // hoặc placeholder khác
+        return $this->logo
+            ? Storage::disk('public')->url($this->logo)
+            : asset('admin/images/brand-placeholder.png'); // ảnh mặc định
     }
 
-    // Scope for active brands
+    /** ================== SCOPES ================== */
+    // Chỉ lấy brand active
     public function scopeActive($query)
     {
         return $query->where('status', true);

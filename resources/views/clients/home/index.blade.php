@@ -148,13 +148,18 @@
                                      alt="{{ $product->name }}" />
                             </div>
                             <div id="pr_item_gallery" class="product_gallery_item slick_slider" data-slides-to-show="4" data-slides-to-scroll="1" data-infinite="false">
-                                @foreach ($product->images ?? [] as $img)
+                                @php
+                                    $images = is_array($product->images) || is_object($product->images) ? $product->images : [];
+                                @endphp
+
+                                @foreach ($images as $img)
                                     <div class="item">
                                         <a href="#" class="product_gallery_item" data-image="{{ Storage::url($img->path) }}" data-zoom-image="{{ Storage::url($img->path) }}">
                                             <img src="{{ Storage::url($img->path) }}" alt="{{ $product->name }}" />
                                         </a>
                                     </div>
                                 @endforeach
+
                             </div>
                         </div>
                     </div>
@@ -174,12 +179,6 @@
                                     @endif
                                 </div>
 
-                                <div class="rating_wrap">
-                                    <div class="rating">
-                                        <div class="product_rate" style="width:80%"></div>
-                                    </div>
-                                    <span class="rating_num">(21)</span>
-                                </div>
 
                                 <div class="pr_desc">
                                     <p>{{ $product->description }}</p>
@@ -235,7 +234,6 @@
                             <hr />
 
                             <ul class="product-meta">
-                                <li>SKU: <a href="#">BE45VGRT</a></li>
                                 <li>Category: <a href="#">Clothing</a></li>
                                 <li>Tags: <a href="#" rel="tag">Cloth</a>, <a href="#" rel="tag">printed</a></li>
                             </ul>

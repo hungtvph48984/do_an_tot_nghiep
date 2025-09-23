@@ -1,24 +1,32 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 
 class Product extends Model
 {
     protected $fillable = [
-        'code', 'name', 'image', 'description', 'metarial', 'instrut',
-        'status', 'category_id',
-        'images',    // ✅ thêm
-        'price',     // ✅ thêm (nếu bạn giữ price ở bảng products)
+        'code',
+        'name',
+        'image',
+        'description',
+        'metarial',
+        'instrut',
+        'status',
+        'category_id',
+        'brand_id',  // ✅ thêm brand_id
+        'images',    
+        'price',     
     ];
 
     protected $casts = [
-        'images' => 'array',   // ✅ album ảnh thành mảng
+        'images' => 'array',   // album ảnh -> array
         'status' => 'boolean',
     ];
 
+    /** ================== RELATIONSHIPS ================== */
     public function variants()
     {
         return $this->hasMany(ProductVariant::class, 'product_id');
@@ -29,6 +37,12 @@ class Product extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    /** ================== ACCESSORS ================== */
     // Ảnh đại diện
     public function getImageUrlAttribute()
     {
@@ -47,7 +61,7 @@ class Product extends Model
         return array_map(fn($p) => Storage::url($p), $imgs);
     }
 
-    // Giá min–max dựa trên giá hiệu lực của variant (sale_price nếu có, không thì price)
+    // Giá min dựa theo giá hiệu lực variant
     public function getMinPriceAttribute(): ?float
     {
         $variants = $this->relationLoaded('variants') ? $this->variants : $this->variants()->get();
@@ -55,6 +69,7 @@ class Product extends Model
         return $variants->min(fn($v) => $v->effective_price);
     }
 
+    // Giá max dựa theo giá hiệu lực variant
     public function getMaxPriceAttribute(): ?float
     {
         $variants = $this->relationLoaded('variants') ? $this->variants : $this->variants()->get();

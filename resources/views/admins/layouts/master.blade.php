@@ -15,7 +15,24 @@
 
     <!-- Content Wrapper -->
     <div class="content-wrapper">
-        @yield('content')
+        <div class="container mt-3">
+            {{-- Hiển thị thông báo flash --}}
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+                </div>
+            @endif
+
+            @yield('content')
+        </div>
     </div>
     <!-- /.content-wrapper -->
 
@@ -27,20 +44,19 @@
 <script src="{{ asset('admins/plugins/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('admins/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script>
-    // ẩn thông báo sau 3 giây
+    // Ẩn thông báo sau 3 giây
     setTimeout(function () {
-        const alertEl = document.querySelector('.alert');
-        if (alertEl) {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alertEl => {
             alertEl.classList.remove('show');
             alertEl.classList.add('fade');
             setTimeout(() => alertEl.remove(), 500);
-        }
+        });
     }, 3000);
 </script>
 
 @yield('scripts')
 @stack('scripts')
-
 
 </body>
 </html>

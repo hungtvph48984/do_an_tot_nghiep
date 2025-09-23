@@ -45,7 +45,7 @@
                             <del id="variant-old-price"></del>
                         </div>
                         <div class="pr_desc">
-                            <p>{{ $product->description }}</p>
+                            <div>{!! $product->description !!}</div>
                         </div>
 
                         {{-- Chọn màu --}}

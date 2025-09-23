@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderDetail extends Model
 {
-    /** @use HasFactory<\Database\Factories\OrderDetailFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -16,24 +15,34 @@ class OrderDetail extends Model
         'price',
         'quantity',
     ];
+
+    // 1 đơn hàng chi tiết thuộc về 1 đơn hàng
     public function order()
     {
         return $this->belongsTo(Order::class);
     }
+
+    // 1 chi tiết đơn hàng thuộc về 1 biến thể sản phẩm
     public function productVariant()
     {
         return $this->belongsTo(ProductVariant::class);
     }
+
+    // Lấy sản phẩm thông qua productVariant
     public function product()
     {
-        return $this->hasOneThrough(Product::class, ProductVariant::class, 'id', 'id', 'product_variant_id', 'product_id');
+        return $this->productVariant->product();
     }
+
+    // Lấy size thông qua productVariant
     public function size()
     {
-        return $this->hasOneThrough(Size::class, ProductVariant::class, 'id', 'id', 'product_variant_id', 'size_id');
+        return $this->productVariant->size();
     }
+
+    // Lấy màu thông qua productVariant
     public function color()
     {
-        return $this->hasOneThrough(Color::class, ProductVariant::class, 'id', 'id', 'product_variant_id', 'color_id');
+        return $this->productVariant->color();
     }
 }

@@ -50,7 +50,10 @@
                                 </tr>
                                 <tr>
                                     <td><strong>Địa chỉ:</strong></td>
-                                    <td>{{ $order->address }}</td>
+                                    <td>
+                                        {{ $order->address }}<br>
+                                        <small class="text-muted">{{ $order->full_address }}</small>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><strong>Ghi chú:</strong></td>
@@ -84,6 +87,14 @@
                                     <td>
                                         <span class="badge {{ $order->payment_badge_class }}">
                                             {{ $order->payment_text }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Trạng thái thanh toán:</strong></td>
+                                    <td>
+                                        <span class="badge {{ $order->payment_status_badge_class }}">
+                                            <i class="fas fa-circle"></i> {{ $order->payment_status_text }}
                                         </span>
                                     </td>
                                 </tr>
@@ -190,14 +201,17 @@
             </div>
 
             <!-- Actions -->
-            <div class="card">
-                <div class="card-header"><h5>Cập nhật trạng thái</h5></div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('admin.orders.updateStatus', $order->id) }}" id="updateStatusForm">
-                        @csrf
-                        @method('PUT')
-                        <div class="row">
-                            <div class="col-md-6">
+            <div class="row">
+                <!-- Cập nhật trạng thái đơn hàng -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-box"></i> Cập nhật trạng thái đơn hàng</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ route('admin.orders.updateStatus', $order->id) }}" id="updateStatusForm">
+                                @csrf
+                                @method('PUT')
                                 <div class="form-group">
                                     <label for="status">Trạng thái đơn hàng:</label>
                                     <select name="status" id="status" class="form-control">
@@ -210,19 +224,79 @@
                                         <option value="6" {{ $order->status == 6 ? 'selected' : '' }}>Đã trả hàng</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mt-4">
-                                    <button type="submit" class="btn btn-primary" id="updateBtn">
-                                        <i class="fas fa-save"></i> Cập nhật trạng thái
-                                    </button>
-                                    <button type="button" class="btn btn-secondary ml-2" onclick="window.print()">
-                                        <i class="fas fa-print"></i> In đơn hàng
-                                    </button>
+                                <div class="form-group">
+                                    <label for="note">Ghi chú (tùy chọn):</label>
+                                    <textarea name="note" id="note" class="form-control" rows="2" placeholder="Thêm ghi chú về việc cập nhật trạng thái..."></textarea>
                                 </div>
-                            </div>
+                                <button type="submit" class="btn btn-primary btn-block" id="updateBtn">
+                                    <i class="fas fa-save"></i> Cập nhật trạng thái
+                                </button>
+                            </form>
                         </div>
-                    </form>
+                    </div>
+                </div>
+
+                <!-- Cập nhật trạng thái thanh toán -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-credit-card"></i> Cập nhật trạng thái thanh toán</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ route('admin.orders.updatePaymentStatus', $order->id) }}" id="updatePaymentStatusForm">
+                                @csrf
+                                @method('PUT')
+                                <div class="form-group">
+                                    <label for="payment_status">Trạng thái thanh toán:</label>
+                                    <select name="payment_status" id="payment_status" class="form-control">
+                                        <option value="0" {{ ($order->payment_status ?? 0) == 0 ? 'selected' : '' }}>
+                                            <i class="fas fa-clock"></i> Chưa thanh toán
+                                        </option>
+                                        <option value="1" {{ ($order->payment_status ?? 0) == 1 ? 'selected' : '' }}>
+                                            <i class="fas fa-check-circle"></i> Đã thanh toán
+                                        </option>
+                                        <option value="2" {{ ($order->payment_status ?? 0) == 2 ? 'selected' : '' }}>
+                                            <i class="fas fa-times-circle"></i> Thanh toán thất bại
+                                        </option>
+                                        <option value="3" {{ ($order->payment_status ?? 0) == 3 ? 'selected' : '' }}>
+                                            <i class="fas fa-undo"></i> Đã hoàn tiền
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="payment_note">Ghi chú thanh toán (tùy chọn):</label>
+                                    <textarea name="payment_note" id="payment_note" class="form-control" rows="2" placeholder="Thêm ghi chú về việc thanh toán...">{{ $order->payment_note ?? '' }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-block" id="updatePaymentBtn">
+                                    <i class="fas fa-money-check-alt"></i> Cập nhật thanh toán
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thao tác khác -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5><i class="fas fa-tools"></i> Thao tác khác</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-secondary btn-block" onclick="window.print()">
+                                <i class="fas fa-print"></i> In đơn hàng
+                            </button>
+                        </div>
+                        
+                                
+                                <form id="deleteForm" method="POST" action="{{ route('admin.orders.destroy', $order->id) }}" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -233,10 +307,12 @@
 @section('scripts')
 <script>
 $(document).ready(function() {
+    // Auto hide alerts
     setTimeout(function() {
         $('.alert').fadeOut('slow');
-    }, 3000);
+    }, 5000);
 
+    // Update status form
     $('#updateStatusForm').submit(function() {
         var $btn = $('#updateBtn');
         var originalHtml = $btn.html();
@@ -245,6 +321,44 @@ $(document).ready(function() {
             $btn.html(originalHtml).prop('disabled', false);
         }, 3000);
     });
+
+    // Update payment status form
+    $('#updatePaymentStatusForm').submit(function() {
+        var $btn = $('#updatePaymentBtn');
+        var originalHtml = $btn.html();
+        $btn.html('<i class="fas fa-spinner fa-spin"></i> Đang xử lý...').prop('disabled', true);
+        setTimeout(function() {
+            $btn.html(originalHtml).prop('disabled', false);
+        }, 3000);
+    });
+
+    // Status change validation
+    $('#status').change(function() {
+        var currentStatus = {{ $order->status }};
+        var newStatus = parseInt($(this).val());
+        
+        // Warning for critical status changes
+        if ((currentStatus < 4 && newStatus == 5) || newStatus == 6) {
+            if (!confirm('Bạn có chắc chắn muốn thay đổi trạng thái này không?')) {
+                $(this).val(currentStatus);
+            }
+        }
+    });
+
+    // Payment status change validation  
+    $('#payment_status').change(function() {
+        var currentPaymentStatus = {{ $order->payment_status ?? 0 }};
+        var newPaymentStatus = parseInt($(this).val());
+        
+        // Warning for refund
+        if (newPaymentStatus == 3) {
+            if (!confirm('Bạn có chắc chắn muốn hoàn tiền cho đơn hàng này không?')) {
+                $(this).val(currentPaymentStatus);
+            }
+        }
+    });
 });
+
+
 </script>
 @endsection

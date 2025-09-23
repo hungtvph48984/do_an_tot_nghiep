@@ -93,7 +93,7 @@
                                 <th>Website</th>
                                 <th width="100">Trạng thái</th>
                                 <th width="80">Sản phẩm</th>
-                                <th width="120">Hành động</th>
+                                <th width="160">Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -162,6 +162,11 @@
                                         <a href="{{ route('admin.brands.edit', $brand->id) }}" 
                                            class="btn btn-sm btn-warning" title="Sửa">
                                             <i class="fas fa-edit"></i>
+                                        </a>
+                                        <!-- Nút Liên kết sản phẩm -->
+                                        <a href="{{ route('admin.brands.link-products', $brand->id) }}" 
+                                           class="btn btn-sm btn-success" title="Liên kết sản phẩm">
+                                            <i class="fas fa-link"></i>
                                         </a>
                                         <button type="button" 
                                                 class="btn btn-sm btn-danger" 

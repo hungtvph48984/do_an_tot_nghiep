@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Brand;
 use App\Models\Size;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class CategoryController extends Controller
 
         $query = $category->products()->with('variants.size');
 
-        // 🔹 Lọc theo giá trong product_variants
+        // 🔹 Lọc theo giá
         if ($request->filled('min_price') || $request->filled('max_price')) {
             $minPrice = $request->min_price ?? 0;
             $maxPrice = $request->max_price ?? PHP_INT_MAX;
@@ -35,37 +36,40 @@ class CategoryController extends Controller
         if ($request->sort) {
             switch ($request->sort) {
                 case 'price_asc':
-                    // Sắp xếp theo giá thấp nhất trong variants
                     $query->withMin('variants', 'price')->orderBy('variants_min_price', 'asc');
                     break;
-
                 case 'price_desc':
                     $query->withMin('variants', 'price')->orderBy('variants_min_price', 'desc');
                     break;
-
                 case 'name_asc':
                     $query->orderBy('name', 'asc');
                     break;
-
                 case 'name_desc':
                     $query->orderBy('name', 'desc');
                     break;
-
                 case 'oldest':
                     $query->orderBy('created_at', 'asc');
                     break;
-
                 case 'newest':
                     $query->orderBy('created_at', 'desc');
                     break;
             }
         }
 
-        $products = $query->get();
+        // 🔹 Phân trang thay vì get()
+        $products = $query->paginate(12)->withQueryString();
 
-        // Lấy danh sách size để hiển thị filter bên sidebar
-        $sizes = Size::all();
+        // 🔹 Lấy danh mục + thương hiệu + size để hiển thị sidebar
+        $allCategories = Category::where('is_active', true)->orderBy('name')->get();
+        $allBrands     = Brand::where('status', 1)->orderBy('name')->get();
+        $sizes         = Size::all();
 
-        return view('clients.category.show', compact('category', 'products', 'sizes'));
+        return view('clients.category.show', compact(
+            'category',
+            'products',
+            'sizes',
+            'allCategories',
+            'allBrands'
+        ));
     }
 }

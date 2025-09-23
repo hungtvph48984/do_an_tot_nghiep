@@ -1,30 +1,34 @@
 <?php
+
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\BrandController as AdminBrandController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
-use App\Http\Controllers\CartController;
+use App\Http\Controllers\Admin\AttributeController;
+
+use App\Http\Controllers\BrandController as ClientBrandController;
+use App\Http\Controllers\CategoryController as ClientCategoryController;
+use App\Http\Controllers\Client\WishlistController;
 use App\Http\Controllers\Client\LoginClientController;
 use App\Http\Controllers\Client\RegisterController;
+
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\CategoryController as ClientCategoryController;
-use App\Http\Controllers\Client\WishlistController;
+use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Route;
 
-
-// ✅ Các route nhóm dành cho admin
+// ================== ADMIN ROUTES ==================
 Route::prefix('admin')->name('admin.')->middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 
@@ -32,42 +36,44 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', AdminMiddleware::cla
         return view('admins.layouts.master');
     });
 
-    // Nhóm route voucher
+    // Thuộc tính (Size + Color)
+    Route::get('/attributes', [AttributeController::class, 'index'])->name('attributes.index');
+    Route::post('/attributes/sizes', [AttributeController::class, 'storeSize'])->name('attributes.sizes.store');
+    Route::put('/attributes/sizes/{size}', [AttributeController::class, 'updateSize'])->name('attributes.sizes.update');
+    Route::delete('/attributes/sizes/{size}', [AttributeController::class, 'destroySize'])->name('attributes.sizes.destroy');
+    Route::post('/attributes/colors', [AttributeController::class, 'storeColor'])->name('attributes.colors.store');
+    Route::put('/attributes/colors/{color}', [AttributeController::class, 'updateColor'])->name('attributes.colors.update');
+    Route::delete('/attributes/colors/{color}', [AttributeController::class, 'destroyColor'])->name('attributes.colors.destroy');
+
+    // Voucher
     Route::prefix('vouchers')->name('vouchers.')->group(function () {
         Route::get('/', [VoucherController::class, 'index'])->name('index');
         Route::get('/create', [VoucherController::class, 'create'])->name('create');
         Route::post('/', [VoucherController::class, 'store'])->name('store');
-        // Route generateCode phải được đặt TRƯỚC các route có parameter
         Route::get('/generate-code', [VoucherController::class, 'generateCode'])->name('generateCode');
         Route::post('/bulk-action', [VoucherController::class, 'bulkAction'])->name('bulk-action');
-        
-        // Các route có parameter phải đặt sau
         Route::get('/{voucher}', [VoucherController::class, 'show'])->name('show');
         Route::get('/{voucher}/edit', [VoucherController::class, 'edit'])->name('edit');
         Route::put('/{voucher}', [VoucherController::class, 'update'])->name('update');
         Route::delete('/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
-
-        Route::get('admin/vouchers/generate-code', [VoucherController::class, 'generateCode'])->name('admin.vouchers.generateCode');
-
     });
 
-
-    // Nhóm route nhãn hàng (brands)
+    // Brands (Admin)
     Route::prefix('brands')->name('brands.')->group(function () {
-        Route::get('/', [BrandController::class, 'index'])->name('index');
-        Route::get('/create', [BrandController::class, 'create'])->name('create');
-        Route::post('/', [BrandController::class, 'store'])->name('store');
-        // Route bulk-action phải được đặt TRƯỚC các route có parameter
-        Route::post('/bulk-action', [BrandController::class, 'bulkAction'])->name('bulk-action');
-        
-        // Các route có parameter phải đặt sau
-        Route::get('/{brand}', [BrandController::class, 'show'])->name('show');
-        Route::get('/{brand}/edit', [BrandController::class, 'edit'])->name('edit');
-        Route::put('/{brand}', [BrandController::class, 'update'])->name('update');
-        Route::delete('/{brand}', [BrandController::class, 'destroy'])->name('destroy');
+        Route::get('/', [AdminBrandController::class, 'index'])->name('index');
+        Route::get('/create', [AdminBrandController::class, 'create'])->name('create');
+        Route::post('/', [AdminBrandController::class, 'store'])->name('store');
+        Route::get('/{brand}', [AdminBrandController::class, 'show'])->name('show');
+        Route::get('/{brand}/edit', [AdminBrandController::class, 'edit'])->name('edit');
+        Route::put('/{brand}', [AdminBrandController::class, 'update'])->name('update');
+        Route::delete('/{brand}', [AdminBrandController::class, 'destroy'])->name('destroy');
+
+        // Liên kết sản phẩm
+        Route::get('/{brand}/link-products', [AdminBrandController::class, 'showLinkProducts'])->name('link-products');
+        Route::post('/{brand}/link-products', [AdminBrandController::class, 'linkProducts'])->name('store-link-products');
     });
 
-    // ✅ Route danh mục
+    // Category (Admin)
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
         Route::get('/create', [CategoryController::class, 'create'])->name('create');
@@ -75,155 +81,114 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', AdminMiddleware::cla
         Route::get('/{category}/edit', [CategoryController::class, 'edit'])->name('edit');
         Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
         Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
-        // ẩn danh mục 
         Route::patch('/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])->name('toggleStatus');
-        Route::get('/categories/hidden', [CategoryController::class, 'hidden'])->name('categories.hidden');
         Route::get('/hidden', [CategoryController::class, 'hidden'])->name('hidden');
-        // Xem chi tiết danh mục
         Route::get('/{category}/show', [CategoryController::class, 'show'])->name('show');
-
     });
 
-    // Nhóm route sản phẩm admin
-    Route::resource('products', AdminProductController::class)->names([
-        'index'   => 'products.index',
-        'create'  => 'products.create',
-        'store'   => 'products.store',
-        'show'    => 'products.show',
-        'edit'    => 'products.edit',
-        'update'  => 'products.update',
-        'destroy' => 'products.destroy',
-    ]);
+    // Products (Admin)
+    Route::get('/products/hidden', [AdminProductController::class, 'hidden'])->name('products.hidden');
+    Route::patch('/products/{product}/toggle-status', [AdminProductController::class, 'toggleStatus'])->name('products.toggleStatus');
+    Route::resource('products', AdminProductController::class)->whereNumber('product');
 
-
-    // Route liên hệ
+    // Contacts (Admin)
     Route::prefix('contacts')->name('contacts.')->group(function () {
-    Route::get('/', [AdminContactController::class, 'index'])->name('index');
-    Route::get('/{id}', [AdminContactController::class, 'show'])->name('show');
-    Route::post('/{id}/reply', [AdminContactController::class, 'reply'])->name('reply');
-
+        Route::get('/', [AdminContactController::class, 'index'])->name('index');
+        Route::get('/{id}', [AdminContactController::class, 'show'])->name('show');
+        Route::post('/{id}/reply', [AdminContactController::class, 'reply'])->name('reply');
     });
-    // ✅ Route đơn hàng
+
+    // Orders (Admin)
     Route::prefix('orders')->name('orders.')->group(function () {
-    Route::get('/', [AdminOrderController::class, 'index'])->name('index');
-    Route::get('/{id}', [AdminOrderController::class, 'show'])->name('show');
-    Route::put('/{id}', [AdminOrderController::class, 'update'])->name('update');
-    Route::delete('/{id}', [AdminOrderController::class, 'destroy'])->name('destroy');
-        Route::put('/{id}/update-status', [AdminOrderController::class, 'updateStatus'])
-        ->name('updateStatus');
+        Route::get('/', [AdminOrderController::class, 'index'])->name('index');
+        Route::get('/{id}', [AdminOrderController::class, 'show'])->name('show');
+        Route::put('/{id}/update-status', [AdminOrderController::class, 'updateStatus'])->name('updateStatus');
+        Route::put('/{id}/payment-status', [AdminOrderController::class, 'updatePaymentStatus'])->name('updatePaymentStatus');
+        Route::put('/{id}', [AdminOrderController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AdminOrderController::class, 'destroy'])->name('destroy');
     });
 
-
-    // ✅ Route user
-     Route::prefix('users')->name('user.')->group(function () {
+    // Users (Admin)
+    Route::prefix('users')->name('user.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
         Route::put('/{id}', [UserController::class, 'update'])->name('update');
-
-        //route xem đơn hàng của user
-        // Route::get('/{id}/orders', [UserController::class, 'orders'])->name('orders');
     });
-
-
 });
 
-// ✅ Đăng nhập
+// ================== AUTH ==================
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
-
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 
+// ================== CLIENT ROUTES ==================
 
-Route::get('/', [HomeController::class, 'index'])->name('home.index'); // Trang chủ
+// Trang chủ
+Route::get('/', [HomeController::class, 'index'])->name('home.index'); 
+
+// Products
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/filter', [ProductController::class, 'filter'])->name('products.filter');
+Route::get('/products/{id}', [ProductController::class, 'details'])->name('products.details');
 Route::get('/detail/{id}', [ProductController::class, 'show'])->name('product.detail');
 Route::get('/product/get-variant', [ProductController::class, 'getVariant'])->name('product.getVariant');
-Route::get('/details/{id}', [ProductController::class, 'show'])->name('details');
-Route::get('/products/filter', [ProductController::class, 'filter'])->name('products.filter');
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('details');
 
-Route::get('/category/{category}', [ProductController::class, 'categoryShow'])
-    ->name('category.show');
-
-// Trang chi tiết sản phẩm
-Route::get('/products/{id}', [ProductController::class, 'details'])
-    ->name('details');
-
-// (tuỳ chọn) trang tất cả sản phẩm
-Route::get('/products', [ProductController::class, 'index'])
-    ->name('products.index');
-// Tìm kiếm sản phẩm
-Route::get('/search', [ProductController::class, 'search'])->name('product.search');
-
-    
-
-//Route đăng nhập/ đăng xuất
-Route::get('/login/client', [LoginClientController::class, 'showLoginForm'])->name('login');
-Route::post('/login/client', [LoginClientController::class, 'login'])->name('client.login.submit');
-Route::post('/logout/client', [LoginClientController::class, 'logout'])->name('client.logout');
-
-//Route đăng ký tài khoản khách hàng
-Route::get('/register/client', [RegisterController::class, 'showRegistrationForm'])->name('client.register');
-Route::post('/register/client', [RegisterController::class, 'register'])->name('client.register.submit');
-
-// Danh mục
+// Categories (Client)
 Route::get('/category/{id}', [ClientCategoryController::class, 'show'])->name('category.show');
 Route::get('/category/{id}/filter', [ClientCategoryController::class, 'filter'])->name('category.filter');
 
+// Brands (Client)
+Route::get('/brands', [ClientBrandController::class, 'index'])->name('brands.index');
+Route::get('/brands/{id}', [ClientBrandController::class, 'show'])->name('brands.show');
 
+// Search
+Route::get('/search', [ProductController::class, 'search'])->name('product.search');
 
-// Các route cần đăng nhập
+// Auth Client
+Route::get('/login/client', [LoginClientController::class, 'showLoginForm'])->name('client.login');
+Route::post('/login/client', [LoginClientController::class, 'login'])->name('client.login.submit');
+Route::post('/logout/client', [LoginClientController::class, 'logout'])->name('client.logout');
+
+Route::get('/register/client', [RegisterController::class, 'showRegistrationForm'])->name('client.register');
+Route::post('/register/client', [RegisterController::class, 'register'])->name('client.register.submit');
+
+// Wishlist
 Route::middleware('auth')->group(function () {
-
-
-    // Wishlist
     Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
 
-    // Danh sách sản phẩm trong wishlist
-    Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
-
-    // Thêm sản phẩm vào giỏ hàng
+    // Cart
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-    // Giỏ hàng
     Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
     Route::get('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-    //hiển thị form thanh toán
     Route::get('/cart/checkout', [CartController::class, 'showCheckout'])->name('cart.checkout');
-    //Thanh toán
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout.post');
-    // Danh sách đơn hàng
+
+    // Orders
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
-
-    //lọc đơn hàng
     Route::get('/orders/filter', [OrderController::class, 'filterOrders'])->name('orders.filter');
-
-    // Xác nhận đã nhận hàng và hủy hàng    
     Route::put('/orders/{id}/confirm-received', [OrderController::class, 'confirmReceived'])->name('orders.confirmReceived');
     Route::put('/orders/{id}/request-return', [OrderController::class, 'requestReturn'])->name('orders.requestReturn');
 
-
-
-    // Route thanh toán
+    // Checkout
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-    // Route mã giảm giá
     Route::post('/apply-coupon', [CouponController::class, 'apply'])->name('cart.applyCoupon');
 
-    // ✅ Route liên hệ
+    // Contact
     Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.form');
     Route::post('/contact', [ContactController::class, 'submitForm'])->name('contact.submit');
-    Route::prefix('my-contacts')->name('contacts.')->middleware('auth')->group(function () {
+    Route::prefix('my-contacts')->name('contacts.')->group(function () {
         Route::get('/', [ContactController::class, 'myContacts'])->name('my'); 
         Route::get('/{id}', [ContactController::class, 'show'])->name('show'); 
     });
-
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::get('/profile/orders', [OrderController::class, 'profileOrders'])->name('profile.orders');
-
-
 });

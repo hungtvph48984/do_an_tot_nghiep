@@ -1,5 +1,4 @@
 @extends('admins.layouts.master')
-
 @section('title', 'Quản lý đơn hàng')
 
 @section('content')
@@ -11,7 +10,7 @@
                     <h3 class="card-title">Danh sách đơn hàng</h3>
                     <a href="{{ url('/admin') }}" class="btn btn-secondary float-right">
                       <i class="fas fa-arrow-left"></i> Quay lại trang chủ Admin
-                     </a>
+                    </a>
                 </div>
                 <div class="card-body">
                     @if(session('success'))
@@ -35,32 +34,34 @@
                     <!-- Form tìm kiếm -->
                     <form method="GET" action="{{ route('admin.orders.index') }}" class="mb-3">
                         <div class="row g-2">
-                            <!-- Keyword chung -->
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <input type="text" name="keyword" class="form-control" placeholder="Tìm theo Mã ĐH, tên, email, SĐT..." value="{{ request('keyword') }}">
                             </div>
-
-                            <!-- Ngày tạo từ → đến -->
                             <div class="col-md-2">
-                                <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+                                <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}" title="Từ ngày">
                             </div>
                             <div class="col-md-2">
-                                <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+                                <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}" title="Đến ngày">
                             </div>
-
-                            <!-- Sắp xếp theo giá -->
                             <div class="col-md-2">
-                                <select name="price_order" class="form-control">
-                                    <option value="">-- Mặc định --</option>
-                                    <option value="asc" {{ request('price_order') == 'asc' ? 'selected' : '' }}>Giá thấp → cao</option>
-                                    <option value="desc" {{ request('price_order') == 'desc' ? 'selected' : '' }}>Giá cao → thấp</option>
+                                <select name="payment_status_filter" class="form-control" title="Trạng thái thanh toán">
+                                    <option value="">-- Trạng thái TT --</option>
+                                    <option value="0" {{ request('payment_status_filter') == '0' ? 'selected' : '' }}>Chưa thanh toán</option>
+                                    <option value="1" {{ request('payment_status_filter') == '1' ? 'selected' : '' }}>Đã thanh toán</option>
+                                    <option value="2" {{ request('payment_status_filter') == '2' ? 'selected' : '' }}>Thất bại</option>
+                                    <option value="3" {{ request('payment_status_filter') == '3' ? 'selected' : '' }}>Đã hoàn tiền</option>
                                 </select>
                             </div>
-
-                            <!-- Nút tìm kiếm + Reset -->
+                            <div class="col-md-1">
+                                <select name="price_order" class="form-control" title="Sắp xếp giá">
+                                    <option value="">Giá</option>
+                                    <option value="asc" {{ request('price_order') == 'asc' ? 'selected' : '' }}>↑</option>
+                                    <option value="desc" {{ request('price_order') == 'desc' ? 'selected' : '' }}>↓</option>
+                                </select>
+                            </div>
                             <div class="col-md-2 d-flex">
                                 <button class="btn btn-primary flex-grow-1 mr-1" type="submit">
-                                    <i class="fas fa-search"></i> Tìm kiếm
+                                    <i class="fas fa-search"></i> Tìm
                                 </button>
                                 <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary flex-grow-1">
                                     <i class="fas fa-times"></i> Reset
@@ -69,20 +70,16 @@
                         </div>
                     </form>
 
-
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
                             <thead class="thead-light">
                                 <tr>
-                                    <th>Mã đơn hàng</th>
-                                    <th>Khách hàng</th>
-                                    <th>Email</th>
-                                    <th>Số điện thoại</th>
+                                    <th>Thông tin đơn hàng</th>
+                                    <th>Địa chỉ</th>
                                     <th>Tổng tiền</th>
-                                   
-                                    <th>Thanh toán</th>
-                                    <th>Trạng thái</th>
-                                    
+                                    <th>Hình thức thanh toán</th>
+                                    <th>Trạng thái thanh toán</th>
+                                    <th>Trạng thái đơn hàng</th>
                                     <th>Ngày tạo</th>
                                     <th>Thao tác</th>
                                 </tr>
@@ -90,10 +87,34 @@
                             <tbody>
                                 @forelse($orders as $order)
                                     <tr>
-                                        <td><strong>#{{ $order->id }}</strong></td>
-                                        <td>{{ $order->user->name ?? 'N/A' }}</td>
-                                        <td>{{ $order->email }}</td>
-                                        <td>{{ $order->phone }}</td>
+                                        <td>
+                                            <strong>Mã: #{{ $order->id }}</strong><br>
+                                            KH: {{ $order->user->name ?? 'N/A' }}<br>
+                                            Email: {{ $order->email }}<br>
+                                            SĐT: {{ $order->phone }}
+                                        </td>
+                                        <td>
+                                            @if(!empty($order->address))
+                                                <div><strong>{{ $order->address }}</strong></div>
+                                                @php
+                                                    $locationParts = [];
+                                                    if ($order->ward && $order->ward->name) {
+                                                        $locationParts[] = $order->ward->name;
+                                                    }
+                                                    if ($order->district && $order->district->name) {
+                                                        $locationParts[] = $order->district->name;
+                                                    }
+                                                    if ($order->province && $order->province->name) {
+                                                        $locationParts[] = $order->province->name;
+                                                    }
+                                                @endphp
+                                                @if(count($locationParts) > 0)
+                                                    <div class="text-muted small">{{ implode(', ', $locationParts) }}</div>
+                                                @endif
+                                            @else
+                                                <span class="text-muted">Không có địa chỉ</span>
+                                            @endif
+                                        </td>
                                         <td><strong>{{ number_format($order->total, 0, ',', '.') }}đ</strong></td>
                                         <td>
                                             @if($order->payment_method == 0)
@@ -102,6 +123,32 @@
                                                 <span class="badge badge-info">Momo</span>
                                             @else
                                                 <span class="badge badge-secondary">Khác</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @php
+                                                $paymentStatus = $order->payment_status ?? 0;
+                                            @endphp
+                                            @if($paymentStatus == 1)
+                                                <span class="badge badge-success">
+                                                    <i class="fas fa-check-circle"></i> Đã thanh toán
+                                                </span>
+                                            @elseif($paymentStatus == 0)
+                                                <span class="badge badge-warning">
+                                                    <i class="fas fa-clock"></i> Chưa thanh toán
+                                                </span>
+                                            @elseif($paymentStatus == 2)
+                                                <span class="badge badge-danger">
+                                                    <i class="fas fa-times-circle"></i> Thanh toán thất bại
+                                                </span>
+                                            @elseif($paymentStatus == 3)
+                                                <span class="badge badge-info">
+                                                    <i class="fas fa-undo"></i> Đã hoàn tiền
+                                                </span>
+                                            @else
+                                                <span class="badge badge-secondary">
+                                                    <i class="fas fa-question-circle"></i> Không xác định
+                                                </span>
                                             @endif
                                         </td>
                                         <td>
@@ -118,7 +165,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="13" class="text-center py-4">
+                                        <td colspan="8" class="text-center py-4">
                                             <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
                                             <p class="text-muted">
                                                 @if(request('keyword'))
@@ -134,12 +181,10 @@
                         </table>
                     </div>
 
-                    <!-- Phân trang -->
                     @if($orders->hasPages())
-                   <div class="d-flex justify-content-center">
-                        {!! $orders->onEachSide(1)->links('pagination::bootstrap-4') !!}
-                    </div>
-
+                        <div class="d-flex justify-content-center">
+                            {!! $orders->onEachSide(1)->links('pagination::bootstrap-4') !!}
+                        </div>
                     @endif
                 </div>
             </div>

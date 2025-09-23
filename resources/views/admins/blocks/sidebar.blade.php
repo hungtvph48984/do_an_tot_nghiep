@@ -8,13 +8,13 @@
     <div class="sidebar">
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
+
                 <li class="nav-item">
-                    <a href="{{ url('admin') }}" class="nav-link">
+                    <a href="{{ url('admin/dashboard') }}" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
-
 
                 <li class="nav-item">
                     <a href="{{ route('admin.categories.index') }}" class="nav-link">
@@ -27,6 +27,14 @@
                     <a href="{{ route('admin.products.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-truck"></i>
                         <p>Sản phẩm</p>
+                    </a>
+                </li>
+
+                <!-- ✅ Thuộc tính (Size & Màu) -->
+                <li class="nav-item">
+                    <a href="{{ route('admin.attributes.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-sliders-h"></i>
+                        <p>Thuộc tính (Size & Màu)</p>
                     </a>
                 </li>
 
@@ -46,21 +54,21 @@
 
                 <li class="nav-item">
                     <a href="{{ route('admin.orders.index')}}" class="nav-link">
-                        <i class="nav-icon fas fa-user"></i>
+                        <i class="nav-icon fas fa-shopping-cart"></i>
                         <p>Đơn hàng</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('admin.user.index')}}" class="nav-link">
-                        <i class="nav-icon fas fa-user"></i>
+                        <i class="nav-icon fas fa-users"></i>
                         <p>Người dùng</p>
                     </a>
                 </li>
 
-                                <li class="nav-item">
+                <li class="nav-item">
                     <a href="{{ route('admin.contacts.index')}}" class="nav-link">
-                        <i class="nav-icon fas fa-user"></i>
+                        <i class="nav-icon fas fa-envelope"></i>
                         <p>Liên hệ</p>
                     </a>
                 </li>

@@ -99,7 +99,7 @@
         <div id="flash-alert" 
              class="alert alert-success alert-dismissible fade show text-center m-0 rounded-0" 
              role="alert">
-            ✅ {{ session('success') }}
+             {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
@@ -108,7 +108,7 @@
         <div id="flash-alert" 
              class="alert alert-danger alert-dismissible fade show text-center m-0 rounded-0" 
              role="alert">
-            ⚠️ {{ session('error') }}
+             {{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
@@ -153,6 +153,35 @@
                         <li >
                             <a  class="nav-link nav_item" href="{{ route('home.index') }}">Trang chủ</a>
                         </li>
+
+                      {{-- Dropdown Brand --}}
+<li class="dropdown">
+    <a class="dropdown-toggle nav-link" href="#" data-bs-toggle="dropdown">Thương hiệu</a>
+    <div class="dropdown-menu">
+        <ul>
+            @forelse($brands as $brand)
+                <li>
+                    <a class="dropdown-item nav-link nav_item" href="{{ route('brands.show', $brand->id) }}">
+                        @if($brand->logo)
+                            <img src="{{ $brand->logo_url }}" 
+                                 alt="{{ $brand->name }}" 
+                                 style="width:20px; height:20px; object-fit:contain; margin-right:5px;">
+                        @endif
+                        {{ $brand->name }}
+                    </a>
+                </li>
+            @empty
+                <li>
+                    <span class="dropdown-item">Chưa có thương hiệu</span>
+                </li>
+            @endforelse
+        </ul>
+    </div>
+</li>
+
+
+
+
                         <li class="dropdown">
                             <a class="dropdown-toggle nav-link" href="#" data-bs-toggle="dropdown">Danh mục</a>
                             <div class="dropdown-menu">
